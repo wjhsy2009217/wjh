@@ -708,7 +708,7 @@ public class ExcelUtil<T>
      */
     public String getAbsoluteFile(String filename)
     {
-        String downloadPath = RuoYiConfig.getDownloadPath() + filename;
+        String downloadPath = "E:/" + filename;
         File desc = new File(downloadPath);
         if (!desc.getParentFile().exists())
         {

@@ -1,6 +1,9 @@
 package com.hzgc.project.system.user.mapper;
 
+import com.hzgc.project.system.user.domain.PzUser;
 import com.hzgc.project.system.user.domain.User;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -105,4 +108,22 @@ public interface UserMapper
      * @return 结果
      */
     public User checkEmailUnique(String email);
+
+    /**
+     * 查询恢复人员
+     * @return
+     */
+    List<PzUser> userRestorePage(@Param("loginname") String loginname, @Param("kind")String kind, @Param("beginTime")String beginTime , @Param("endTime")String endTime , @Param("depa")String depa, @Param("sex")String sex,@Param("poli") String poli,
+                                 @Param("post")String post, @Param("edu")String edu, @Param("usernum")String usernum,@Param("status")Integer status);
+
+    PzUser checkPwdUnique(@Param("userid") long userid, @Param("old")String old);
+
+    void editUserPwd(@Param("userid") long userid, @Param("pwd")String pwd);
+
+    List<PzUser> userMaintainPage(@Param("loginname") String loginname, @Param("kind")String kind, @Param("beginTime")String beginTime , @Param("endTime")String endTime , @Param("depa")String depa, @Param("post")String post,@Param("phone") String phone,
+                                 @Param("usernum")String usernum, @Param("rightgroup")String rightgroup, @Param("status")Integer status);
+
+    int deleteUserMaintainByIds(@Param("ids")String ids,@Param("status") int status);
+
+    List<PzUser> findHighRole(@Param("rightgroupid")int rightgroupid);
 }

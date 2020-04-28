@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+
+<body class="gray-bg">
+	<div class="ui-layout-west">
+		<div class="main-content">
+			<div class="box box-main">
+				<div class="box-header">
+					<div class="box-title">
+						<i class="fa icon-grid"></i> 角色组
+					</div>
+				</div>
+				<div class="ui-layout-content">
+					<div id="tree" class="ztree"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="container-div ui-layout-center">
+		<div class="row">
+			<form id="user-form">
+				<input type="hidden" id="rightgroupid" name="rightgroupid" value="0">
+			</form>
+	        <div class="col-sm-12 select-table table-striped">
+			    <table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script th:src="@{/ajax/libs/jquery-layout/jquery.layout-latest.js}"></script>
+	<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+	<script th:inline="javascript">
+
+		var prefix = ctx + "system/user";
+
+		$(function() {
+			$('body').layout({ west__size: 185 });
+			queryUserList();
+			queryDeptTree();
+		});
+
+		function queryUserList() {
+		    var options = {
+		        url: prefix + "/highRolePage",
+		        sortName: "createTime",
+		        sortOrder: "desc",
+		        modalName: "用户",
+		        search: false,
+		        showExport: false,
+		        columns: [{
+		            checkbox: true
+		        },
+		        {
+		            field: 'userid',
+		            title: '用户编号'
+		        },
+		        {
+		            field: 'username',
+		            title: '姓名',
+		            sortable: true
+		        },
+		        {
+		            field: 'pzDepartment.departfullname',
+		            title: '组织全称'
+		        }]
+		    };
+		    $.table.init(options);
+		}
+		
+		function queryDeptTree()
+		{
+			var url = ctx + "system/role/highRoleTree";
+			var options = {
+		        url: url,
+		        expandLevel: 2,
+		        onClick : zOnClick
+		    };
+			$.tree.init(options);
+			
+			function zOnClick(event, treeId, treeNode) {
+				$("#rightgroupid").val(treeNode.id);
+                console.log($("#rightgroupid").val());
+				console.log(treeNode);
+				$.table.search();
+			}
+		}
+		
+		$('#btnExpand').click(function() {
+			$._tree.expandAll(true);
+		    $(this).hide();
+		    $('#btnCollapse').show();
+		});
+		
+		$('#btnCollapse').click(function() {
+			$._tree.expandAll(false);
+		    $(this).hide();
+		    $('#btnExpand').show();
+		});
+		
+		$('#btnRefresh').click(function() {
+			queryDeptTree();
+		});
+
+		/*用户管理-部门*/
+		function dept() {
+			var url = ctx + "system/dept";
+			createMenuItem(url, "部门管理");
+		}
+
+		/*用户管理-重置密码*/
+		function resetPwd(userId) {
+		    var url = prefix + '/resetPwd/' + userId;
+		    $.modal.open("重置密码", url, '800', '300');
+		}
+	</script>
+</body>
+</html>

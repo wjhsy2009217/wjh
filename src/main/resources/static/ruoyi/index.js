@@ -4,7 +4,7 @@
 $(function() {
     // MetsiMenu
     $('#side-menu').metisMenu();
-
+    loadMenu();
     //固定菜单栏
     $(function() {
         $('.sidebar-collapse').slimScroll({
@@ -14,17 +14,13 @@ $(function() {
         });
     });
 
+
     // 菜单切换
     $('.navbar-minimalize').click(function() {
         $("body").toggleClass("mini-navbar");
         SmoothlyMenu();
     });
 
-    $('#side-menu>li').click(function() {
-        if ($('body').hasClass('mini-navbar')) {
-            NavToggle();
-        }
-    });
     $('#side-menu>li li a').click(function() {
         if ($(window).width() < 769) {
             NavToggle();
@@ -71,6 +67,30 @@ function SmoothlyMenu() {
 }
 
 /**
+ * 路径处理
+ */
+function loadMenu() {
+    var jsonObj={ "10101":"system/user/editPassword",//密码修改
+                    "10202":"system/system/editSystemParam",//系统参数
+                    "10201":"system/system/editSystemSet",//企业名称
+                    "19902":"system/user/userRestore",//人员恢复
+                    "30101":"system/role/rightgroup",//角色维护
+                    "30102":"system/role/highRole",//高等级角色维护
+                    "30103":"system/role/modrgroup",//角色系统权限
+                    "30201":"system/user/userAttributes",//用户属性
+                    "30203":"system/user/userMaintain",//人员维护
+    };
+    $('a[id^="xxx"]').each(function () {
+        var id = $(this).attr("id").slice(3);
+        for(var item in jsonObj){
+            if(item==id){  //item 表示Json串中的属性，如'name'
+                var jValue=jsonObj[item];//key所对应的value
+                $(this).attr('href',jValue);
+            }
+        }
+    });
+}
+/**
  * iframe处理
  */
 $(function() {
@@ -83,6 +103,49 @@ $(function() {
         return width;
     }
 
+
+    $('.top').on("click",function() {
+        var id = $(this).attr("id").slice(2);
+        $('#side-menu').empty();
+        $.ajax({
+            type: "POST",
+            url: "/system/model",
+            data:{"id":id},
+            dataType: "json",
+            success: function(result){
+                var data = result.pzModulegroups;
+                var tags = '';
+                if(data[0].modulegroupname != null){
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        tags += '<li>';
+                        tags +=     '<a href="#">';
+                        tags +=         '<i class="fa fa fa-bar-chart-o" ></i>';
+                        tags +=         '<span class="nav-label">'+data[i].modulegroupname+'</span>';
+                        tags +=         '<span class="fa arrow"></span>';
+                        tags +=     '</a>';
+
+                        tags +=     '<ul class="nav nav-second-level collapse">';
+                        if(data[i].pzModules[0].modulename != null){
+                            for(var j = 0;j < data[i].pzModules.length;j++){
+                                tags +=         '<li>';
+                                tags +=             '<a class="menuItem" id="xxx'+data[i].pzModules[j].moduleid+'" > ' + data[i].pzModules[j].modulename + '</a>';
+                                tags +=          '</li>';
+                            }
+                        }
+                        tags +=     '</ul>';
+                        tags += '</li>';
+                    }
+
+                    $('#side-menu').append($(tags));
+                    loadMenu();
+                    $('.menuItem').on('click', menuItem);
+                    $("#side-menu").metisMenu();
+
+                }
+            },
+
+        })
+    })
     //滚动到指定选项卡
     function scrollToTab(element) {
         var marginLeftVal = calSumWidth($(element).prevAll()),
@@ -119,7 +182,7 @@ $(function() {
         // 可视区域非tab宽度
         var tabOuterWidth = calSumWidth($(".content-tabs").children().not(".menuTabs"));
         //可视区域tab宽度
-        var visibleWidth = $(".content-tabs").outerWidth(true) - tabOuterWidth;
+        var visibleWidth = $(".content-tabs").outerWidth(true);
         //实际滚动宽度
         var scrollVal = 0;
         if ($(".page-tabs-content").width() < visibleWidth) {
@@ -233,6 +296,8 @@ $(function() {
         }
         return false;
     }
+
+
 
     $('.menuItem').on('click', menuItem);
 

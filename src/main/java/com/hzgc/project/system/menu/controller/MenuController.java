@@ -33,14 +33,12 @@ public class MenuController extends BaseController
     @Autowired
     private IMenuService menuService;
 
-    @RequiresPermissions("system:menu:view")
     @GetMapping()
     public String menu()
     {
         return prefix + "/menu";
     }
 
-    @RequiresPermissions("system:menu:list")
     @GetMapping("/list")
     @ResponseBody
     public List<Menu> list(Menu menu)
@@ -53,7 +51,6 @@ public class MenuController extends BaseController
      * 删除菜单
      */
     @Log(title = "菜单管理", businessType = BusinessType.DELETE)
-    @RequiresPermissions("system:menu:remove")
     @PostMapping("/remove/{menuId}")
     @ResponseBody
     public AjaxResult remove(@PathVariable("menuId") Long menuId)
@@ -94,7 +91,6 @@ public class MenuController extends BaseController
      * 新增保存菜单
      */
     @Log(title = "菜单管理", businessType = BusinessType.INSERT)
-    @RequiresPermissions("system:menu:add")
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Menu menu)
@@ -116,7 +112,6 @@ public class MenuController extends BaseController
      * 修改保存菜单
      */
     @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
-    @RequiresPermissions("system:menu:edit")
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Menu menu)

@@ -1,6 +1,8 @@
 package com.hzgc.project.system.user.mapper;
 
 import java.util.List;
+
+import com.hzgc.project.system.user.domain.PzPost;
 import com.hzgc.project.system.user.domain.UserPost;
 
 /**
@@ -41,4 +43,6 @@ public interface UserPostMapper
      * @return 结果
      */
     public int batchUserPost(List<UserPost> userPostList);
+
+    List<PzPost> selectAll();
 }

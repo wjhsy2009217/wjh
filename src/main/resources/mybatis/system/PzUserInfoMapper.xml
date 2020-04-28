@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzgc.project.system.user.mapper.PzUserInfoMapper">
+  <resultMap id="userinfo" type="com.hzgc.project.system.user.domain.PzUserInfo">
+      <id column="userid" jdbcType="BIGINT" property="userid" />
+      <result column="worktypeid" jdbcType="INTEGER" property="worktypeid" />
+      <result column="nationid" jdbcType="INTEGER" property="nationid" />
+      <result column="headshipid" jdbcType="INTEGER" property="headshipid" />
+      <result column="techtitleid" jdbcType="INTEGER" property="techtitleid" />
+      <result column="educationid" jdbcType="INTEGER" property="educationid" />
+      <result column="politicalstateid" jdbcType="INTEGER" property="politicalstateid" />
+      <result column="postid" jdbcType="INTEGER" property="postid" />
+      <result column="ismarry" jdbcType="VARCHAR" property="ismarry" />
+      <result column="nativeplace" jdbcType="VARCHAR" property="nativeplace" />
+      <result column="householdplace" jdbcType="VARCHAR" property="householdplace" />
+      <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+      <result column="email" jdbcType="VARCHAR" property="email" />
+      <result column="address" jdbcType="VARCHAR" property="address" />
+      <result column="phone" jdbcType="VARCHAR" property="phone" />
+      <result column="postcode" jdbcType="VARCHAR" property="postcode" />
+      <result column="workbegin" jdbcType="TIMESTAMP" property="workbegin" />
+      <result column="profession" jdbcType="VARCHAR" property="profession" />
+      <result column="college" jdbcType="VARCHAR" property="college" />
+      <result column="collegeenddate" jdbcType="TIMESTAMP" property="collegeenddate" />
+      <result column="contractbegindate" jdbcType="TIMESTAMP" property="contractbegindate" />
+      <result column="contractenddate" jdbcType="TIMESTAMP" property="contractenddate" />
+      <result column="registertime" jdbcType="TIMESTAMP" property="registertime" />
+      <result column="canceltime" jdbcType="TIMESTAMP" property="canceltime" />
+      <result column="operatortheme" jdbcType="VARCHAR" property="operatortheme" />
+      <result column="operatorlan" jdbcType="VARCHAR" property="operatorlan" />
+      <result column="operatorskin" jdbcType="VARCHAR" property="operatorskin" />
+      <result column="loginaccount" jdbcType="VARCHAR" property="loginaccount" />
+      <result column="loginpassword" jdbcType="VARCHAR" property="loginpassword" />
+      <result column="loginmode" jdbcType="VARCHAR" property="loginmode" />
+      <result column="loginerror" jdbcType="INTEGER" property="loginerror" />
+      <result column="lastlogintime" jdbcType="TIMESTAMP" property="lastlogintime" />
+      <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+      <result column="modifytime" jdbcType="TIMESTAMP" property="modifytime" />
+          <association column="pzUser" javaType="com.hzgc.project.system.user.domain.PzUser" property="pzUser">
+              <id column="userid" jdbcType="BIGINT" property="userid" />
+              <result column="username" jdbcType="VARCHAR" property="username" />
+              <result column="departid" jdbcType="INTEGER" property="departid" />
+              <result column="userkindid" jdbcType="INTEGER" property="userkindid" />
+              <result column="usergroupid" jdbcType="INTEGER" property="usergroupid" />
+              <result column="rightgroupid" jdbcType="INTEGER" property="rightgroupid" />
+              <result column="usernum" jdbcType="VARCHAR" property="usernum" />
+              <result column="handtel" jdbcType="VARCHAR" property="handtel" />
+              <result column="identitycardno" jdbcType="VARCHAR" property="identitycardno" />
+              <result column="useraccount" jdbcType="VARCHAR" property="useraccount" />
+              <result column="outid" jdbcType="VARCHAR" property="outid" />
+              <result column="sex" jdbcType="VARCHAR" property="sex" />
+              <result column="userstatus" jdbcType="INTEGER" property="userstatus" />
+              <result column="photo" jdbcType="VARCHAR" property="photo" />
+          </association>
+  </resultMap>
+   <select id="selectByUserId" resultMap="userinfo">
+        select * from pzuserinfo where userid = #{userid}
+   </select>
+
+   <update id="updateByUserId">
+        update pzuserinfo set
+            operatortheme=#{operatortheme},
+            operatorlan=#{operatorlan},
+            operatorskin=#{operatorskin},
+            loginerror=#{loginerror}
+        where userid=#{userid}
+   </update>
+
+    <update id="updateLoginError">
+       update pzuserinfo i left join pzuser u on i.userid = u.userid set i.loginerror = #{count} where u.username = #{username}
+    </update>
+
+    <select id="queryUsernameForLogin" parameterType="java.lang.String" resultMap="userinfo">
+  		select
+  			 *
+  		from
+  			 pzuserinfo i left join pzuser u on(u.userid = i.userid)
+  		where
+  			u.username=#{username}
+  	</select>
+</mapper>

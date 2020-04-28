@@ -1,5 +1,6 @@
 package com.hzgc.framework.shiro.service;
 
+import com.hzgc.project.system.user.domain.PzUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,9 @@ import com.hzgc.project.system.user.domain.User;
 import com.hzgc.project.system.user.domain.UserStatus;
 import com.hzgc.project.system.user.service.IUserService;
 
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+
 /**
  * 登录校验方法
  * 
@@ -34,6 +38,9 @@ public class LoginService
 
     @Autowired
     private IUserService userService;
+
+    /*@Autowired
+    private */
 
     /**
      * 登录
@@ -133,4 +140,41 @@ public class LoginService
         user.setLoginDate(DateUtils.getNowDate());
         userService.updateUserInfo(user);
     }
+    /**
+     * 登陆
+     * @param username
+     * @param password
+     * @return
+     */
+    /*public String dologin(HttpSession session, String username, String password){
+        PzUserInfo queryUsernameForLogin = userInfoService.queryUsernameForLogin(username);
+
+        if(queryUsernameForLogin != null){
+            PzUserInfo user = userInfoService.login(username,password);
+            String lastLoginTime = "";
+            if(user.getLoginerror() == 0){
+                Object lastLoginTimes = session.getAttribute("lastLoginTime_"+username);
+                if(lastLoginTimes==null){
+                    Date date = new Date(System.currentTimeMillis());
+                    lastLoginTime = com.hzgc.common.utils.StringUtils.setDateFormate(date);
+                    //记录最后一次登陆时间
+                    session.setAttribute("lastLoginTime_"+username, lastLoginTime);//把最后一次登录时间放到session中
+                }else{
+                    lastLoginTime=(String)lastLoginTimes;
+                }
+                session.setAttribute("user", user);//把当前登录用户信息放到session
+                session.setMaxInactiveInterval(60*60*12);
+                logger.info("登陆成功：当前登录用户名为"+username);
+                return "ok";
+            }
+            else{
+
+                logger.info("密码错误！");
+                return user.getLoginerror().toString();
+            }
+        } else {
+            logger.info("该用户不存在！");
+            return "noUser";
+        }
+    }*/
 }

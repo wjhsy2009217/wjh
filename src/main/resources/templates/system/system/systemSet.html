@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	
+	<div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="post-form"  th:object="${systemSet}">
+					<div class="select-list">
+						<ul>
+							<input id="sid" name="sid" type="hidden" th:field="*{systemid}"/>
+							<li>
+								公司名称：<input id="variablechar"  type="text" name="variablechar" th:field="*{variablechar}"/>
+							</li>
+
+
+							<a id="edit" class="btn btn-primary btn-edit" type="submit"><!---->
+								<i class="fa fa-edit"></i> 修改
+							</a>
+						</ul>
+
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script th:inline="javascript">
+		var editFlag = [[${@permission.hasPermi('system:post:edit')}]];
+		var removeFlag = [[${@permission.hasPermi('system:post:remove')}]];
+		var datas = [[${@dict.getType('sys_normal_disable')}]];
+		var prefix = ctx + "system/system";
+        $('#edit').click(function(){
+            var sid = $('#sid').val();
+            var variablechar = $('#variablechar').val();
+				$.ajax({
+					type: "POST",
+					url: prefix+"/saveEditSystemSet",
+					data:{"sid":sid,"variablechar":variablechar},
+					dataType: "text",
+					success: function(result){
+						alert("保存成功");
+					},
+				})
+
+        })
+	</script>
+</body>
+</html>

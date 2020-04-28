@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzgc.project.system.department.mapper.PzDepartmentMapper" >
+  <resultMap id="department" type="com.hzgc.project.system.department.domain.PzDepartment" >
+    <id column="departid" property="departid" jdbcType="INTEGER" />
+    <result column="departname" property="departname" jdbcType="VARCHAR" />
+    <result column="departcode" property="departcode" jdbcType="VARCHAR" />
+    <result column="outid" property="outid" jdbcType="VARCHAR" />
+    <result column="departfullid" property="departfullid" jdbcType="VARCHAR" />
+    <result column="departfullname" property="departfullname" jdbcType="VARCHAR" />
+    <result column="departfartherid" property="departfartherid" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="usedflag" property="usedflag" jdbcType="VARCHAR" />
+    <result column="departtele" property="departtele" jdbcType="VARCHAR" />
+    <result column="departaddress" property="departaddress" jdbcType="VARCHAR" />
+    <result column="departleader" property="departleader" jdbcType="VARCHAR" />
+    <result column="enddate" property="enddate" jdbcType="TIMESTAMP" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    departid, departname, departcode, outid, departfullid, departfullname, departfartherid, 
+    sort, usedflag, departtele, departaddress, departleader, enddate, createtime, modifytime
+  </sql>
+
+  <select id="selectAll" resultMap="department">
+    select * from pzdepartment
+  </select>
+
+  <select id="findById" resultMap="department">
+    select * from pzdepartment where departid = #{departid}
+  </select>
+
+  <update id="updateById">
+    update pzdepartment set
+    departname = #{departname},
+    departleader = #{departleader},
+    departtele = #{departtele},
+    usedflag = #{usedflag},
+    departaddress = #{departaddress},
+    enddate = #{enddate},
+    departcode = #{departcode},
+    departfullname = #{departfullname},
+    sort = #{sort}
+    where
+    departid = #{departid}
+  </update>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzgc.project.system.post.mapper.PzPostMapper" >
+  <resultMap id="pzPost" type="com.hzgc.project.system.user.domain.PzPost" >
+    <id column="postid" property="postid" jdbcType="INTEGER" />
+    <result column="postname" property="postname" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="selectAll" resultMap="pzPost">
+    select * from pzpost
+  </select>
+
+  <select id="selectById" resultMap="pzPost">
+    select * from pzpost where postid = #{postid}
+  </select>
+  <select id="selectByName" resultMap="pzPost">
+    select * from pzpost where postname = #{postname}
+  </select>
+
+  <insert id="addPost">
+    insert into pzpost (postname,createtime,modifytime)
+    values (#{postname},now(),now())
+  </insert>
+
+  <update id="editPostById">
+    update pzpost set
+    postname = #{postname},
+    modifytime = now()
+    where
+    postid = #{postid}
+  </update>
+
+  <delete id="delById">
+    delete from pzpost where  postid in
+    <foreach collection="array" item="postid" open="(" separator="," close=")">
+      #{postid}
+    </foreach>
+  </delete>
+</mapper>

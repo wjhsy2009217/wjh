@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+	<div class="row">
+		<div class="select-list">
+			<ul class="nav nav-tabs">
+				<li id="techtitle" class="active"><a href="#">职称维护</a></li>
+				<li id="headship"><a href="#">职务维护</a></li>
+				<li id="userstatus"><a href="#">用工情况维护</a></li>
+				<li id="post"><a href="#">岗位维护</a></li>
+				<li id="usergroup"><a href="#">班组维护</a></li>
+				<li id="worktype"><a href="#">工种维护</a></li>
+			</ul>
+		</div>
+		<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+			<a class="btn btn-success" onclick="$.operate.add()" >
+				<i class="fa fa-plus"></i> 新增
+			</a>
+			<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()">
+				<i class="fa fa-edit"></i> 修改
+			</a>
+			<a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" >
+				<i class="fa fa-remove"></i> 删除
+			</a>
+		</div>
+
+
+		<div class="col-sm-12 select-table table-striped">
+			<table id="bootstrap-table" data-mobile-responsive="true"></table>
+		</div>
+	</div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:role:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:role:remove')}]];
+    var datas = [[${@dict.getType('sys_normal_disable')}]];
+    var prefix = ctx + "system/user";
+    $(function() {// 初始化内容
+        techtitle();
+		$('li').click(function(){
+            $(".nav-tabs li").removeClass("active");
+		    $(this).attr("class","active");
+		    var that = this;
+		    var id = $(that).attr("id");
+		    console.log(id)
+		    if(id == "headship"){
+                headship();
+			} else if(id == "techtitle"){
+                techtitle();
+			} else if(id=="userstatus"){
+				userstatus();
+			} else if(id =="post"){
+		        post();
+			} else if(id == "usergroup"){
+                usergroup();
+			} else if(id == "worktype"){
+                worktype();
+			}
+		})
+    });
+    function worktype(){
+        var options = {
+            url: prefix + "/worktypeForPage",
+            createUrl: prefix + "/addWorktype",
+            updateUrl: prefix + "/editWorktype/{id}",
+            removeUrl: prefix + "/delWorktype",
+            exportUrl: prefix + "/export",
+            sortName: "roleSort",
+            modalName: "工种",
+            search: false,
+            showExport: false,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'worktypeid',
+                    title: '编号'
+                },
+                {
+                    field: 'worktypename',
+                    title: '工种名称',
+                    sortable: true
+                },
+            ]
+        };
+        $.table.init(options);
+    }
+    function usergroup(){
+        var options = {
+            url: prefix + "/usergroupForPage",
+            createUrl: prefix + "/addUsergroup",
+            updateUrl: prefix + "/editUsergroup/{id}",
+            removeUrl: prefix + "/delUsergroup",
+            sortName: "roleSort",
+            modalName: "用户组",
+            search: false,
+            showExport: false,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'usergroupid',
+                    title: '编号'
+                },
+                {
+                    field: 'usergroupname',
+                    title: '用户组名称',
+                    sortable: true
+                },
+            ]
+        };
+        $.table.init(options);
+    }
+    function post(){
+        var options = {
+            url: prefix + "/postForPage",
+            createUrl: prefix + "/addPost",
+            updateUrl: prefix + "/editPost/{id}",
+            removeUrl: prefix + "/delPost",
+            sortName: "roleSort",
+            modalName: "岗位维护",
+            search: false,
+            showExport: false,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'postid',
+                    title: '编号'
+                },
+                {
+                    field: 'postname',
+                    title: '岗位名称',
+                    sortable: true
+                },
+            ]
+        };
+        $.table.init(options);
+    }
+
+    function userstatus(){
+        var options = {
+            url: prefix + "/userstatusForPage",
+            createUrl: prefix + "/addUserstatus",
+            updateUrl: prefix + "/editUserstatus/{id}",
+            removeUrl: prefix + "/delStatus",
+            sortName: "roleSort",
+            modalName: "用工情况维护",
+            search: false,
+            showExport: false,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'userstatusid',
+                    title: '编号'
+                },
+                {
+                    field: 'userstatusname',
+                    title: '用工情况',
+                    sortable: true
+                },
+                ]
+        };
+        $.table.init(options);
+    }
+	function techtitle(){
+		var options = {
+			url: prefix + "/techtitleForPage",
+			createUrl: prefix + "/addTechtitle",
+			updateUrl: prefix + "/editTechtitle/{id}",
+			removeUrl: prefix + "/delTechtitle",
+			sortName: "roleSort",
+			modalName: "职称维护",
+			search: false,
+			showExport: false,
+			columns: [{
+				checkbox: true
+			},
+				{
+					field: 'techtitleid',
+					title: '编号'
+				},
+				{
+					field: 'techtitlename',
+					title: '职称',
+					sortable: true
+				},]
+		};
+		$.table.init(options);
+	}
+    function headship(){
+        var options = {
+            url: prefix + "/headshipForPage",
+            createUrl: prefix + "/addHeadship",
+            updateUrl: prefix + "/editHeadship/{id}",
+            removeUrl: prefix + "/delHeadship",
+            sortName: "createTime",
+            modalName: "职务维护",
+            search: false,
+            showExport: false,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'headshipid',
+                    title: '编号'
+                },
+                {
+                    field: 'headshipname',
+                    title: '职务名称',
+                    sortable: true
+                }]
+        };
+        $.table.init(options);
+	}
+    $(function() {
+
+    });
+
+</script>
+</body>
+</html>

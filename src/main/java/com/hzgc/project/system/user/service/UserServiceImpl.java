@@ -1,7 +1,12 @@
 package com.hzgc.project.system.user.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.hzgc.common.utils.Md5Utils;
+import com.hzgc.project.system.user.domain.PzUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hzgc.common.constant.UserConstants;
@@ -355,4 +360,47 @@ public class UserServiceImpl implements IUserService
         }
         return idsStr.toString();
     }
+
+    @Override
+    public List<PzUser> userRestorePage(String loginName,String kind,String beginTime ,String endTime ,String depa,String sex,String poli,
+                                        String post,String edu,String usernum,int status) {
+        return userMapper.userRestorePage(loginName,kind,beginTime ,endTime ,depa,sex,poli,
+                post,edu,usernum,status);
+    }
+
+    @Override
+    public String checkPwdUnique(long userid, String pwd) {
+        pwd = Md5Utils.hash(pwd);
+        PzUser user = userMapper.checkPwdUnique(userid,pwd);
+        if (StringUtils.isNotNull(user))
+        {
+            return UserConstants.USER_PASSWORD_ERROR;
+        }
+        return UserConstants.USER_PASSWORD_NOT_ERROR;
+    }
+
+    @Override
+    public void editUserPwd(long userid, String pwd) {
+        pwd = Md5Utils.hash(pwd);
+        userMapper.editUserPwd(userid,pwd);
+    }
+
+    @Override
+    public List<PzUser> userMaintainPage(String loginName,String kind,String beginTime ,String endTime ,String depa,
+                                         String post,String phone,String usernum,String rightgroup,int status) {
+        return userMapper.userMaintainPage(loginName,kind,beginTime ,endTime ,depa,rightgroup,
+                post,phone,usernum,status);
+    }
+
+    @Override
+    public int deleteUserMaintainByIds(String ids, int status) throws Exception {
+        return userMapper.deleteUserMaintainByIds(ids,status);
+    }
+
+    @Override
+    public List<PzUser> findHighRole(int rightgroupid) {
+        return userMapper.findHighRole(rightgroupid);
+    }
+
+
 }

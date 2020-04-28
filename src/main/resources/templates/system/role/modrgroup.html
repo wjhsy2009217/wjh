@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+
+<body class="gray-bg">
+	<div class="ui-layout-west">
+		<div class="main-content">
+			<div class="col-sm-12 search-collapse">
+				<div class="box-title">
+					<i class="fa icon-grid"></i>角色列表
+				</div>
+				<div class="col-sm-12 select-table table-striped">
+					<table id="bootstrap-table" data-mobile-responsive="true"></table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	
+	<div class="container-div ui-layout-center">
+		<div class="row">
+			<div class="box box-main">
+				<div class="box-header">
+					<div class="box-title">
+						<i class="fa icon-grid"></i> 系统树
+					</div>
+				</div>
+				<div class="ui-layout-content">
+					<div id="tree" class="ztree"></div>
+				</div>
+			</div>
+
+
+
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script th:src="@{/ajax/libs/jquery-layout/jquery.layout-latest.js}"></script>
+	<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+	<script th:inline="javascript">
+		var datas = [[${@dict.getType('sys_normal_disable')}]];
+		var prefix = ctx + "system/role";
+		var rowId = 1;
+
+		$(function() {
+
+			$('body').layout({ west__size: 400 });
+			queryUserList();
+			queryDeptTree(1);
+            $('#bootstrap-table').on('click-row.bs.table', function (e,row,$element) {
+                console.log(row.rightgroupid);
+                rowId = row.rightgroupid;
+                queryDeptTree(row.rightgroupid);
+            });
+
+		});
+
+
+
+		function queryUserList() {
+		    var options = {
+                url: prefix + "/rightgroupList",
+                createUrl: prefix + "/addRightgroup",
+                updateUrl: prefix + "/editRightgroup/{id}",
+                removeUrl: prefix + "/delRightgroup",
+                sortOrder: "level",
+                modalName: "角色维护",
+                search: false,
+                showExport: false,
+                columns: [
+                    {
+                        field: 'rightgroupid',
+                        title: '用户编号'
+                    },
+                    {
+                        field: 'rightgroupname',
+                        title: '角色名',
+                        sortable: true
+                    },
+                    {
+                        field: 'level',
+                        title: '角色等级',
+                        sortable: true
+                    },
+                ]
+		    };
+		    $.table.init(options);
+		}
+		
+		function queryDeptTree(rightgroupid)
+		{
+            var url = ctx + "system/role/projectTree?rightgroupid="+rightgroupid;
+            var options = {
+                id: "tree",
+                url: url,
+                check: { enable: true, nocheckInherit: true, chkboxType: { "Y": "ps", "N": "ps" } },
+                expandLevel: 0,
+                onCheck : onCheck,
+            };
+            $.tree.init(options);
+		}
+		
+		$('#btnExpand').click(function() {
+			$._tree.expandAll(true);
+		    $(this).hide();
+		    $('#btnCollapse').show();
+		});
+		
+		$('#btnCollapse').click(function() {
+			$._tree.expandAll(false);
+		    $(this).hide();
+		    $('#btnExpand').show();
+		});
+		
+		$('#btnRefresh').click(function() {
+			queryDeptTree();
+		});
+
+        function onCheck(event, treeId, treeNode){
+            var treeObj=$.fn.zTree.getZTreeObj("tree"),
+			nodes=treeObj.getCheckedNodes(true);
+            var param1 = [];
+            var param2 = [];
+            console.log(nodes);
+            for (var i=0, l=nodes.length; i < l; i++)
+            {
+                if(nodes[i].pId == null){
+                    param1.push(nodes[i].id);
+				} else if(nodes[i].pId != null && nodes[i].children != null){
+
+				} else {
+                    param2.push(nodes[i].id);
+				}
+
+            }
+            $.ajax({
+                type: "POST",
+                url: prefix+"/editProjectTree",
+                data:{
+                    "projectid":param1.toString(),
+                    "moduleid":param2.toString(),
+                    "id":rowId,
+                },
+
+            })
+
+			console.log(param1);
+            console.log(param2);
+
+        }
+	</script>
+</body>
+</html>

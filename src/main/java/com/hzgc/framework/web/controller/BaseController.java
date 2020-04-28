@@ -51,7 +51,19 @@ public class BaseController
             PageHelper.startPage(pageNum, pageSize, orderBy);
         }
     }
-
+    /**
+     * 设置请求分页数据
+     */
+    protected void startPage1(String orderBy)
+    {
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer pageNum = pageDomain.getPageNum();
+        Integer pageSize = pageDomain.getPageSize();
+        if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize))
+        {
+            PageHelper.startPage(pageNum, pageSize, orderBy);
+        }
+    }
     /**
      * 响应请求分页数据
      */

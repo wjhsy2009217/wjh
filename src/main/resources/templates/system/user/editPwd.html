@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+	<form class="form-horizontal m" id="form-user-edit" th:object="${user}">
+		<div class="form-group">
+			<label class="col-sm-3 control-label ">旧密码：</label>
+			<div class="col-sm-8">
+				<input class="form-control" type="password" id="old"   name="old"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label ">新密码：</label>
+			<div class="col-sm-8">
+				<input class="form-control" type="password" id="pwd1"   name="pwd1"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label ">确认密码：</label>
+			<div class="col-sm-8">
+				<input class="form-control" type="password" id="pwd2"   name="pwd2"/>
+			</div>
+		</div>
+		<div class="clearfix form-actions">
+			<div class="col-md-offset-3 col-md-9">
+				<a id="edit" class="btn btn-primary btn-edit" type="submit" shiro:hasPermission="system:system:saveEditSystemSet"><!---->
+					<i class="fa fa-edit"></i> 保存
+				</a>
+
+			</div>
+		</div>
+	</form>
+</div>
+<div th:include="include::footer"></div>
+<script th:src="@{/ajax/libs/select/select2.js}"></script>
+<script>
+    var prefix = ctx + "system/user";
+    $("#edit").click(function(){
+        if ($.validate.form()) {
+            var pwd = $('#pwd1').val();
+
+            $.ajax({
+                type: "POST",
+                url: prefix+"/editPwd",
+                data:{
+                    "pwd":pwd,
+
+                },
+                dataType: "text",
+
+                success: function(result){
+                    alert("保存成功");
+                },
+            })
+        }
+    });
+    $("#form-user-edit").validate({
+        rules:{
+            old:{
+                required:true,
+                remote: {
+                    url: ctx + "system/user/checkPwdUnique",
+                    type: "post",
+                    dataType: "json",
+                    dataFilter: function (data, type) {
+                        return $.validate.unique(data);
+                    }
+                }
+            },
+            pwd1:{
+                required:true,
+                equalTo:"#pwd2",
+                minlength: 5,
+                maxlength: 20
+            },
+            pwd2:{
+                required:true,
+                equalTo:"#pwd1",
+                minlength: 5,
+                maxlength: 20
+            },
+
+        },
+        messages: {
+            "pwd1": {
+                remote: "Email已经存在"
+            },
+            "pwd2":{
+                remote: "手机号码已经存在"
+            }
+        },
+        submitHandler:function(form){
+            edit();
+        }
+    });
+
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            edit();
+        }
+    }
+
+    function edit() {
+        var userId = $("input[name='userId']").val();
+        var deptId = $("input[name='deptId']").val();
+        var userName = $("input[name='userName']").val();
+        var email = $("input[name='email']").val();
+        var phonenumber = $("input[name='phonenumber']").val();
+        var sex = $("#sex option:selected").val();
+        var status = $("input[name='status']").is(':checked') == true ? 0 : 1;
+        var roleIds = $.form.selectCheckeds("role");
+        var postIds = $.form.selectSelects("post");
+        $.ajax({
+            cache : true,
+            type : "POST",
+            url : ctx + "system/user/edit",
+            data : {
+                "userId": userId,
+                "deptId": deptId,
+                "userName": userName,
+                "email": email,
+                "phonenumber": phonenumber,
+                "sex": sex,
+                "status": status,
+                "roleIds": roleIds,
+                "postIds": postIds
+            },
+            async : false,
+            error : function(request) {
+                $.modal.alertError("系统错误");
+            },
+            success : function(data) {
+                $.operate.saveSuccess(data);
+            }
+        });
+    }
+
+    /*用户管理-修改-选择部门树*/
+    function selectDeptTree() {
+        var deptId = $("#treeId").val();
+        var url = ctx + "system/dept/selectDeptTree/" + deptId;
+        var options = {
+            title: '选择部门',
+            width: "380",
+            height: "380",
+            url: url,
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layero){
+        var tree = layero.find("iframe")[0].contentWindow.$._tree;
+        if ($.tree.notAllowParents(tree)) {
+            var body = layer.getChildFrame('body', index);
+            $("#treeId").val(body.find('#treeId').val());
+            $("#treeName").val(body.find('#treeName').val());
+            layer.close(index);
+        }
+    }
+</script>
+</body>
+</html>

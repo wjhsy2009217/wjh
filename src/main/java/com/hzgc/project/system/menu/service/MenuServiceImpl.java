@@ -49,14 +49,15 @@ public class MenuServiceImpl implements IMenuService
     {
         List<Menu> menus = new LinkedList<Menu>();
         // 管理员显示所有菜单信息
-        if (user.isAdmin())
+        menus = menuMapper.selectMenuNormalAll();
+       /* if (user.isAdmin())
         {
             menus = menuMapper.selectMenuNormalAll();
         }
         else
         {
             menus = menuMapper.selectMenusByUserId(user.getUserId());
-        }
+        }*/
         return TreeUtils.getChildPerms(menus, 0);
     }
 

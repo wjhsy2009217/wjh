@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	
+	<div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="post-form">
+					<div class="select-list">
+						<ul>
+							<li>
+								主题：
+								<select name="operatortheme" id="operatortheme">
+									<option th:selected="${params.operatortheme=='1'}" value="1">主题一</option>
+									<option th:selected="${params.operatortheme=='2'}" value="2">主题二</option>
+								</select>
+								<input type="hidden" name="userid" id="userid" th:value="${params.userid}"/>
+							</li>
+
+							<li>
+								语言：
+								<select  name="operatorlan" id="operatorlan">
+									<option th:selected="${params.operatorlan=='1'}" value="1">中文</option>
+									<option th:selected="${params.operatorlan=='2'}" value="2">英文</option>
+								</select>
+							</li>
+							<li>
+								皮肤：
+								<select id="operatorskin"   name="operatorskin"  >
+									<option th:selected="${params.operatorskin=='1'}" value="1">默认</option>
+									<option th:selected="${params.operatorskin=='2'}" value="2">黑色</option>
+									<option th:selected="${params.operatorskin=='3'}" value="3">灰色</option>
+									<option th:selected="${params.operatorskin=='4'}" value="4">银色</option>
+									<option th:selected="${params.operatorskin=='5'}" value="5">白色</option>
+								</select>
+							</li>
+							<li>
+								最大错误次数：
+								<input type="text" id="loginerror" name="loginerror" th:value="${params.loginerror}"/>
+							</li>
+
+							<li>
+								<a id="edit" class="btn btn-primary btn-edit" type="submit" ><!---->
+									<i class="fa fa-edit"></i> 修改
+								</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+
+
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script th:inline="javascript">
+		var editFlag = [[${@permission.hasPermi('system:post:edit')}]];
+		var removeFlag = [[${@permission.hasPermi('system:post:remove')}]];
+		var datas = [[${@dict.getType('sys_normal_disable')}]];
+		var prefix = ctx + "system/system";
+        $('#edit').click(function(){
+            var operatortheme = $('#operatortheme').val();
+            var operatorlan = $('#operatorlan').val();
+            var userid = $('#userid').val();
+            var operatorskin = $('#operatorskin').val();
+            var loginerror = $('#loginerror').val();
+            $.ajax({
+                type: "POST",
+                url: prefix+"/saveEditSystemParam",
+                data:{
+                    "operatortheme":operatortheme,
+					"operatorlan":operatorlan,
+                    "userid":userid,
+                    "operatorskin":operatorskin,
+                    "loginerror":loginerror,
+				},
+                dataType: "text",
+
+                success: function(result){
+                    alert("保存成功");
+                },
+            })
+
+        })
+	</script>
+</body>
+</html>

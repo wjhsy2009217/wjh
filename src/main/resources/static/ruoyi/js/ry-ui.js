@@ -16,6 +16,7 @@
                 $.table._params = $.common.isEmpty(options.queryParams) ? $.table.queryParams : options.queryParams;
                 _sortOrder = $.common.isEmpty(options.sortOrder) ? "asc" : options.sortOrder;
                 _sortName = $.common.isEmpty(options.sortName) ? "" : options.sortName;
+                $('#bootstrap-table').bootstrapTable('destroy');
                 $('#bootstrap-table').bootstrapTable({
                     url: options.url,                                   // 请求后台的URL（*）
                     contentType: "application/x-www-form-urlencoded",   // 编码类型
@@ -78,8 +79,8 @@
                     search.orderByColumn = params.sort;
                     search.isAsc = params.order;
                     return search;
+
                 }
-                console.log(params);
                 $("#bootstrap-table").bootstrapTable('refresh', params);
             },
             // 下载
@@ -267,6 +268,7 @@
             },
             // 条件查询
             search: function (formId) {
+
                 var currentId = $.common.isEmpty(formId) ? $('form').attr('id') : formId;
                 var params = {};
                 $.each($("#" + currentId).serializeArray(), function (i, field) {
@@ -716,7 +718,7 @@
                     check: options.check,
                     view: {selectedMulti: false, nameIsHTML: true},
                     data: {key: {title: "title"}, simpleData: {enable: true}},
-                    callback: {onClick: options.onClick}
+                    callback: {onClick: options.onClick,onCheck:options.onCheck}
                 };
                 $.get(options.url, function (data) {
                     var treeName = $("#treeName").val();

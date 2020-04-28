@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzgc.project.system.rightgroup.mapper.PzRightgroupMapper" >
+  <resultMap id="rightgroup" type="com.hzgc.project.system.rightgroup.domain.PzRightgroup" >
+    <id column="rightgroupid" property="rightgroupid" jdbcType="INTEGER" />
+    <result column="rightgroupname" property="rightgroupname" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="selectAll" resultMap="rightgroup">
+    select * from pzrightgroup
+    <if test="rightgroupname != null and rightgroupname != ''">where rightgroupname like concat('%', #{rightgroupname}, '%')</if>
+  </select>
+
+  <select id="selectById" resultMap="rightgroup">
+     select * from pzrightgroup where rightgroupid = #{rightgroupid}
+  </select>
+
+  <select id="selectByName" resultMap="rightgroup">
+      select * from pzrightgroup where rightgroupname = #{rightgroupname}
+  </select>
+
+  <update id="edit">
+      update pzrightgroup set
+        rightgroupname = #{rightgroupname},
+         level = #{level},
+         modifytime = now()
+      where
+        rightgroupid = #{rightgroupid}
+  </update>
+
+  <insert id="add">
+    insert into pzrightgroup (rightgroupname,level,createtime,modifytime)
+    values (#{rightgroupname},#{level},now(),now())
+  </insert>
+
+  <delete id="del">
+    delete from pzrightgroup where rightgroupid in
+    <foreach collection="array" item="rightgroupid" open="(" separator="," close=")">
+      #{rightgroupid}
+    </foreach>
+  </delete>
+</mapper>

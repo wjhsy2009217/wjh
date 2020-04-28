@@ -44,6 +44,114 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="dataScope"     column="data_scope"    />
 		<result property="status"       column="role_status"    />
 	</resultMap>
+	<resultMap id="pzUser" type="com.hzgc.project.system.user.domain.PzUser" >
+		<id column="userid" property="userid" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="departid" property="departid" jdbcType="INTEGER" />
+		<result column="userkindid" property="userkindid" jdbcType="INTEGER" />
+		<result column="usergroupid" property="usergroupid" jdbcType="INTEGER" />
+		<result column="rightgroupid" property="rightgroupid" jdbcType="INTEGER" />
+		<result column="usernum" property="usernum" jdbcType="VARCHAR" />
+		<result column="handtel" property="handtel" jdbcType="VARCHAR" />
+		<result column="identitycardno" property="identitycardno" jdbcType="VARCHAR" />
+		<result column="useraccount" property="useraccount" jdbcType="VARCHAR" />
+		<result column="outid" property="outid" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="userstatus" property="userstatus" jdbcType="INTEGER" />
+		<result column="photo" property="photo" jdbcType="VARCHAR" />
+		<association property="pzUserInfo" column="pzUserInfo"  javaType="com.hzgc.project.system.user.domain.PzUserInfo">
+			<id column="userid" property="userid" jdbcType="BIGINT" />
+			<result column="worktypeid" property="worktypeid" jdbcType="INTEGER" />
+			<result column="nationid" property="nationid" jdbcType="INTEGER" />
+			<result column="headshipid" property="headshipid" jdbcType="INTEGER" />
+			<result column="techtitleid" property="techtitleid" jdbcType="INTEGER" />
+			<result column="educationid" property="educationid" jdbcType="INTEGER" />
+			<result column="politicalstateid" property="politicalstateid" jdbcType="INTEGER" />
+			<result column="postid" property="postid" jdbcType="INTEGER" />
+			<result column="ismarry" property="ismarry" jdbcType="VARCHAR" />
+			<result column="nativeplace" property="nativeplace" jdbcType="VARCHAR" />
+			<result column="householdplace" property="householdplace" jdbcType="VARCHAR" />
+			<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+			<result column="email" property="email" jdbcType="VARCHAR" />
+			<result column="address" property="address" jdbcType="VARCHAR" />
+			<result column="phone" property="phone" jdbcType="VARCHAR" />
+			<result column="postcode" property="postcode" jdbcType="VARCHAR" />
+			<result column="workbegin" property="workbegin" jdbcType="TIMESTAMP" />
+			<result column="profession" property="profession" jdbcType="VARCHAR" />
+			<result column="college" property="college" jdbcType="VARCHAR" />
+			<result column="collegeenddate" property="collegeenddate" jdbcType="TIMESTAMP" />
+			<result column="contractbegindate" property="contractbegindate" jdbcType="TIMESTAMP" />
+			<result column="contractenddate" property="contractenddate" jdbcType="TIMESTAMP" />
+			<result column="registertime" property="registertime" jdbcType="TIMESTAMP" />
+			<result column="canceltime" property="canceltime" jdbcType="TIMESTAMP" />
+			<result column="operatortheme" property="operatortheme" jdbcType="VARCHAR" />
+			<result column="operatorlan" property="operatorlan" jdbcType="VARCHAR" />
+			<result column="operatorskin" property="operatorskin" jdbcType="VARCHAR" />
+			<result column="loginaccount" property="loginaccount" jdbcType="VARCHAR" />
+			<result column="loginpassword" property="loginpassword" jdbcType="VARCHAR" />
+			<result column="loginmode" property="loginmode" jdbcType="VARCHAR" />
+			<result column="loginerror" property="loginerror" jdbcType="INTEGER" />
+			<result column="lastlogintime" property="lastlogintime" jdbcType="TIMESTAMP" />
+			<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+			<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+		</association>
+		<association property="pzDepartment" column="pzDepartment"  javaType="com.hzgc.project.system.department.domain.PzDepartment">
+			<id column="departid" property="departid" jdbcType="INTEGER" />
+			<result column="departname" property="departname" jdbcType="VARCHAR" />
+			<result column="departcode" property="departcode" jdbcType="VARCHAR" />
+			<result column="outid" property="outid" jdbcType="VARCHAR" />
+			<result column="departfullid" property="departfullid" jdbcType="VARCHAR" />
+			<result column="departfullname" property="departfullname" jdbcType="VARCHAR" />
+			<result column="departfartherid" property="departfartherid" jdbcType="INTEGER" />
+			<result column="sort" property="sort" jdbcType="INTEGER" />
+			<result column="usedflag" property="usedflag" jdbcType="VARCHAR" />
+			<result column="departtele" property="departtele" jdbcType="VARCHAR" />
+			<result column="departaddress" property="departaddress" jdbcType="VARCHAR" />
+			<result column="departleader" property="departleader" jdbcType="VARCHAR" />
+			<result column="enddate" property="enddate" jdbcType="TIMESTAMP" />
+			<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+			<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+		</association>
+		<association property="pzEducation" column="pzEducation"  javaType="com.hzgc.project.system.user.domain.PzEducation">
+			<id column="educationid" property="educationid" jdbcType="INTEGER" />
+			<result column="educationname" property="educationname" jdbcType="VARCHAR" />
+			<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+			<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+		</association>
+		<association property="pzPoliticalstate" column="pzPoliticalstate"  javaType="com.hzgc.project.system.user.domain.PzPoliticalstate">
+			<id column="politicalstateid" property="politicalstateid" jdbcType="INTEGER" />
+			<result column="politicalstatename" property="politicalstatename" jdbcType="VARCHAR" />
+			<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+			<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+		</association>
+		<association property="pzPost" column="pzPost"  javaType="com.hzgc.project.system.user.domain.PzPost">
+			<id column="postid" property="postid" jdbcType="INTEGER" />
+			<result column="postname" property="postname" jdbcType="VARCHAR" />
+			<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+			<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+		</association>
+		<association property="pzUserKind" column="pzUserKind"  javaType="com.hzgc.project.system.user.domain.PzUserKind">
+			<id column="userkindid" property="userkindid" jdbcType="INTEGER" />
+			<result column="userkindname" property="userkindname" jdbcType="VARCHAR" />
+			<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+			<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+		</association>
+		<association property="pzRightgroup" column="pzRightgroup"  javaType="com.hzgc.project.system.rightgroup.domain.PzRightgroup">
+			<id column="rightgroupid" property="rightgroupid" jdbcType="INTEGER" />
+			<result column="rightgroupname" property="rightgroupname" jdbcType="VARCHAR" />
+			<result column="level" property="level" jdbcType="INTEGER" />
+			<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+			<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+		</association>
+		<association property="pzUserstatus" column="pzUserstatus"  javaType="com.hzgc.project.system.user.domain.PzUserstatus">
+			<id column="userstatusid" property="userstatusid" jdbcType="INTEGER" />
+			<result column="userstatusname" property="userstatusname" jdbcType="VARCHAR" />
+			<result column="status_flag" property="statusFlag" jdbcType="VARCHAR" />
+			<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+			<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+		</association>
+
+	</resultMap>
 	
 	<sql id="selectUserVo">
         select  u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.phonenumber, u.sex, u.avatar, u.password, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_time, u.remark,
@@ -177,5 +285,117 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			sysdate()
  		)
 	</insert>
-	
+
+	<select id="userRestorePage" resultMap="pzUser">
+		 select u.userid,u.username,po.postname,depa.departname,edu.educationname,poli.politicalstatename,u.usernum,
+      u.sex,k.userkindname,info.phone,r.rightgroupname,sta.userstatusname,depa.departfullname from pzuser u
+            left join
+        pzuserinfo info on u.userid = info.userid
+            left join
+        pzpost po on po.postid = info.postid
+            left join
+        pzdepartment depa on depa.departid = u.departid
+            left join
+        pzeducation edu on  edu.educationid = info.educationid
+            left join
+        pzpoliticalstate poli on poli.politicalstateid = info.politicalstateid
+            left join
+        pzuserkind k on k.userkindid = u.userkindid
+            left join
+        pzuserstatus sta on sta.userstatusid = u.userstatus
+            left join
+        pzrightgroup r on r.rightgroupid = u.rightgroupid
+            where u.userstatus = #{status}
+		<if test="loginname != null and loginname != ''">AND u.username like concat('%', #{loginname}, '%')</if>
+		<if test="kind != null and kind != 0 and kind != ''">AND k.userkindid = #{kind}</if>
+		<if test="depa != null and depa != 0 and depa != ''">AND depa.departid = #{depa}</if>
+		<if test="sex != null and sex != 0 and sex != ''">AND u.sex = #{sex}</if>
+		<if test="poli != null and poli !=0 and poli != ''">AND poli.politicalstateid = #{poli}</if>
+		<if test="post != null and post != 0 and post != ''">AND po.postid = #{post}</if>
+		<if test="edu != null and edu != 0 and edu != ''">AND edu.educationid = #{edu}</if>
+		<if test="usernum != null and usernum != ''">AND u.usernum like concat('%', #{usernum}, '%')</if>
+		<if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+			AND date_format(info.createtime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+		</if>
+		<if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+			AND date_format(info.createtime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+		</if>
+	</select>
+
+	<select id="checkPwdUnique" resultMap="pzUser">
+		select * from  pzuser u
+            left join
+        pzuserinfo info on u.userid = info.userid
+        	where
+        u.userid=#{userid} and info.loginpassword=#{old}
+	</select>
+	<update id="editUserPwd">
+      update
+          pzuser u left join pzuserinfo i on i.userid = u.userid
+      set
+          i.loginpassword=#{pwd}
+      where
+          u.userid=#{userid}
+    </update>
+
+	<select id="userMaintainPage" resultMap="pzUser">
+		select u.userid,u.username,po.postname,depa.departname,edu.educationname,poli.politicalstatename,u.usernum,
+		u.sex,k.userkindname,info.phone,r.rightgroupname,sta.userstatusname,depa.departfullname from pzuser u
+		left join
+		pzuserinfo info on u.userid = info.userid
+		left join
+		pzpost po on po.postid = info.postid
+		left join
+		pzdepartment depa on depa.departid = u.departid
+		left join
+		pzeducation edu on  edu.educationid = info.educationid
+		left join
+		pzpoliticalstate poli on poli.politicalstateid = info.politicalstateid
+		left join
+		pzuserkind k on k.userkindid = u.userkindid
+		left join
+		pzuserstatus sta on sta.userstatusid = u.userstatus
+		left join
+		pzrightgroup r on r.rightgroupid = u.rightgroupid
+		where u.userstatus = #{status}
+		<if test="loginname != null and loginname != ''">AND u.username like concat('%', #{loginname}, '%')</if>
+		<if test="kind != null and kind != 0 and kind != ''">AND k.userkindid = #{kind}</if>
+		<if test="depa != null and depa != 0 and depa != ''">AND depa.departid = #{depa}</if>
+		<if test="phone != null and phone !=0 and phone != ''">AND info.phone = #{phone}</if>
+		<if test="post != null and post != 0 and post != ''">AND po.postid = #{post}</if>
+		<if test="rightgroup != null and rightgroup != 0 and rightgroup != ''">AND r.rightgroupid = #{rightgroup}</if>
+		<if test="usernum != null and usernum != ''">AND u.usernum like concat('%', #{usernum}, '%')</if>
+		<if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+			AND date_format(info.createtime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+		</if>
+		<if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+			AND date_format(info.createtime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+		</if>
+	</select>
+
+	<update id="deleteUserMaintainByIds" >
+	  update
+          pzuser u
+      set
+          u.userstatus = #{status}
+      where
+          u.userid=#{ids}
+	</update>
+	<select id="findHighRole" resultMap="pzUser">
+		 select u.userid,u.username,k.userkindname,r.rightgroupname,depa.departfullname from pzuser u
+            left join
+        pzuserinfo info on u.userid = info.userid
+            left join
+        pzdepartment depa on depa.departid = u.departid
+            left join
+        pzuserkind k on k.userkindid = u.userkindid
+            left join
+        pzrightgroup r on r.rightgroupid = u.rightgroupid
+		<if test="rightgroupid != 0 and rightgroupid != null and rightgroupid != 999">
+			where
+			r.rightgroupid = #{rightgroupid}
+		</if>
+
+	</select>
+
 </mapper> 

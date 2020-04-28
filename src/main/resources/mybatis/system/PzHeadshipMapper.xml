@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzgc.project.system.headship.mapper.PzHeadshipMapper" >
+  <resultMap id="pzHeadship" type="com.hzgc.project.system.headship.domain.PzHeadship" >
+    <id column="headshipid" property="headshipid" jdbcType="INTEGER" />
+    <result column="headshipname" property="headshipname" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+  </resultMap>
+    <select id="selectAll" resultMap="pzHeadship">
+      select * from pzHeadship
+    </select>
+  <select id="checkHeadshipnameUnique" resultMap="pzHeadship" >
+    select * from pzHeadship where headshipname = #{old}
+  </select>
+  <insert id="insertHeadship" useGeneratedKeys="true" keyProperty="userId" parameterType="pzHeadship">
+    insert into pzHeadship
+      (headshipname,createtime,modifytime)
+    values
+      (#{headshipname},now(),now())
+  </insert>
+  <select id="findHeadshipById" resultMap="pzHeadship" >
+    select * from pzHeadship where headshipid = #{headshipid}
+  </select>
+  <update id="editHeadshipById" >
+    update pzHeadship set
+      headshipname = #{headshipname},
+      modifytime = now()
+    where
+     headshipid = #{headshipid}
+  </update>
+  <delete id="delHeadshipById"  parameterType="long">
+    delete from pzHeadship where headshipid in
+    <foreach collection="array" item="headshipid" open="(" separator="," close=")">
+      #{headshipid}
+    </foreach>
+  </delete>
+</mapper>

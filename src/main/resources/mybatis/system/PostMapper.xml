@@ -16,6 +16,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="updateTime"    column="update_time"   />
 		<result property="remark"        column="remark"        />
 	</resultMap>
+	<resultMap id="pzPost" type="com.hzgc.project.system.user.domain.PzPost" >
+		<id column="postid" property="postid" jdbcType="INTEGER" />
+		<result column="postname" property="postname" jdbcType="VARCHAR" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+	</resultMap>
 	
 	<sql id="selectPostVo">
         select post_id, post_code, post_name, post_sort, status, create_by, create_time, remark 
@@ -106,5 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			sysdate()
  		)
 	</insert>
-
-</mapper> 
+	<select id="selectAll" resultMap="pzPost">
+		select * from pzpost
+	</select>
+</mapper>

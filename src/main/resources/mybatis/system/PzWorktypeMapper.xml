@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzgc.project.system.worktype.mapper.PzWorktypeMapper" >
+  <resultMap id="pzWorktype" type="com.hzgc.project.system.worktype.domain.PzWorktype" >
+    <id column="worktypeid" property="worktypeid" jdbcType="INTEGER" />
+    <result column="worktypename" property="worktypename" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="selectAll" resultMap="pzWorktype">
+      select * from pzworktype
+  </select>
+
+
+  <select id="selectById" resultMap="pzWorktype">
+    select * from pzworktype where worktypeid = #{worktypeid}
+  </select>
+  <select id="selectByName" resultMap="pzWorktype">
+    select * from pzworktype where worktypename = #{worktypename}
+  </select>
+
+  <insert id="addWorktype">
+    insert into pzworktype (worktypename,createtime,modifytime)
+    values (#{worktypename},now(),now())
+  </insert>
+
+  <update id="editWorktypeById">
+    update pzworktype set
+    worktypename = #{worktypename},
+    modifytime = now()
+    where
+    worktypeid = #{worktypeid}
+  </update>
+
+  <delete id="delById">
+    delete from pzworktype where  worktypeid in
+    <foreach collection="array" item="worktypeid" open="(" separator="," close=")">
+      #{worktypeid}
+    </foreach>
+  </delete>
+</mapper>

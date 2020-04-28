@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+
+<body class="gray-bg">
+	<div class="container-div ui-layout-center">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="user-form">
+					<input type="hidden" id="deptId" name="deptId">
+	                <input type="hidden" id="parentId" name="parentId">
+					<div class="select-list">
+						<ul>
+							<li>
+								姓名：<input type="text" name="rightgroupname"/>
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+							    <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+	        	<a class="btn btn-success" onclick="$.operate.add()" >
+	                <i class="fa fa-plus"></i> 新增
+	            </a>
+	             <a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" >
+		            <i class="fa fa-edit"></i> 修改
+		        </a>
+	            <a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" >
+	                <i class="fa fa-remove"></i> 删除
+	            </a>
+
+	        </div>
+	        
+	        <div class="col-sm-12 select-table table-striped">
+			    <table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+	<div th:include="include :: footer"></div>
+	<script th:src="@{/ajax/libs/jquery-layout/jquery.layout-latest.js}"></script>
+	<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+	<script th:inline="javascript">
+		var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
+		var removeFlag = [[${@permission.hasPermi('system:user:remove')}]];
+		var resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];
+		var datas = [[${@dict.getType('sys_normal_disable')}]];
+		var prefix = ctx + "system/role";
+
+		$(function() {
+			$('body').layout({ west__size: 185 });
+			queryUserList();
+		});
+
+		function queryUserList() {
+		    var options = {
+		        url: prefix + "/rightgroupList",
+		        createUrl: prefix + "/addRightgroup",
+		        updateUrl: prefix + "/editRightgroup/{id}",
+		        removeUrl: prefix + "/delRightgroup",
+		        sortOrder: "level",
+		        modalName: "角色维护",
+		        search: false,
+		        showExport: false,
+		        columns: [{
+		            checkbox: true
+		        },
+		        {
+		            field: 'rightgroupid',
+		            title: '用户编号'
+		        },
+		        {
+		            field: 'rightgroupname',
+		            title: '角色名',
+		            sortable: true
+		        },
+				{
+					field: 'level',
+					title: '角色等级',
+					sortable: true
+				},
+		        ]
+		    };
+		    $.table.init(options);
+		}
+		
+
+		
+		$('#btnExpand').click(function() {
+			$._tree.expandAll(true);
+		    $(this).hide();
+		    $('#btnCollapse').show();
+		});
+		
+		$('#btnCollapse').click(function() {
+			$._tree.expandAll(false);
+		    $(this).hide();
+		    $('#btnExpand').show();
+		});
+		
+
+
+		/*用户管理-部门*/
+		function dept() {
+			var url = ctx + "system/dept";
+			createMenuItem(url, "部门管理");
+		}
+
+		/*用户管理-重置密码*/
+		function resetPwd(userId) {
+		    var url = prefix + '/resetPwd/' + userId;
+		    $.modal.open("重置密码", url, '800', '300');
+		}
+	</script>
+</body>
+</html>

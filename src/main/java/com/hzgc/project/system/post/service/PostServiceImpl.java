@@ -1,6 +1,9 @@
 package com.hzgc.project.system.post.service;
 
 import java.util.List;
+
+import com.hzgc.project.system.post.mapper.PzPostMapper;
+import com.hzgc.project.system.user.domain.PzPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hzgc.common.constant.UserConstants;
@@ -24,6 +27,9 @@ public class PostServiceImpl implements IPostService
 
     @Autowired
     private UserPostMapper userPostMapper;
+
+    @Autowired
+    private PzPostMapper pzPostMapper;
 
     /**
      * 查询岗位信息集合
@@ -178,5 +184,40 @@ public class PostServiceImpl implements IPostService
             return UserConstants.POST_CODE_NOT_UNIQUE;
         }
         return UserConstants.POST_CODE_UNIQUE;
+    }
+
+    @Override
+    public List<PzPost> selectAll() {
+        return pzPostMapper.selectAll();
+    }
+
+    @Override
+    public PzPost selectById(int postid) {
+        return pzPostMapper.selectById(postid);
+    }
+
+    @Override
+    public String selectByName(String postname) {
+        PzPost pp = pzPostMapper.selectByName(postname);
+        if(pp==null){
+            return "0";
+        }
+        return "1";
+    }
+
+    @Override
+    public int addPost(PzPost pzPost) {
+        return pzPostMapper.addPost(pzPost);
+    }
+
+    @Override
+    public int editPostById(PzPost pzPost) {
+        return pzPostMapper.editPostById(pzPost);
+    }
+
+    @Override
+    public int delById(String postid) {
+        Long[] ids = Convert.toLongArray(postid);
+        return pzPostMapper.delById(ids);
     }
 }

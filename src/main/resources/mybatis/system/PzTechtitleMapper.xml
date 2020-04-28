@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzgc.project.system.user.mapper.PzTechtitleMapper" >
+  <resultMap id="pzTechtitle" type="com.hzgc.project.system.user.domain.PzTechtitle" >
+    <id column="techtitleid" property="techtitleid" jdbcType="INTEGER" />
+    <result column="techtitlename" property="techtitlename" jdbcType="VARCHAR" />
+    <result column="levelkind" property="levelkind" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="modifytime" property="modifytime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="techtitleForPage" resultMap="pzTechtitle" >
+   select *
+    from pztechtitle
+  </select>
+  <select id="checkTechtitlenameUnique" resultMap="pzTechtitle" >
+    select * from pztechtitle where techtitlename = #{old}
+  </select>
+  <insert id="insertTechtitle" useGeneratedKeys="true" keyProperty="userId" parameterType="pzTechtitle">
+    insert into pztechtitle
+      (techtitlename,levelkind,createtime,modifytime)
+    values
+      (#{techtitlename},#{levelkind},now(),now())
+  </insert>
+  <select id="findTechtitleById" resultMap="pzTechtitle" >
+    select * from pztechtitle where techtitleid = #{techtitleid}
+  </select>
+  <update id="editTechtitleById" >
+    update pztechtitle set
+      techtitlename = #{techtitlename},
+      levelkind = #{levelkind},
+      modifytime = now()
+    where
+     techtitleid = #{techtitleid}
+  </update>
+  <delete id="delTechtitleById"  parameterType="long">
+    delete from pztechtitle where techtitleid in
+    <foreach collection="array" item="techtitleid" open="(" separator="," close=")">
+      #{techtitleid}
+    </foreach>
+  </delete>
+
+</mapper>
