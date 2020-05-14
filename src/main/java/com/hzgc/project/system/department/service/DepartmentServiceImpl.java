@@ -46,4 +46,54 @@ public class DepartmentServiceImpl implements IDepartmentService {
         return pzDepartmentMapper.findById(departid);
     }
 
+    @Override
+    public int add(PzDepartment department) {
+        int maxid = pzDepartmentMapper.findMaxId()+1;
+        if(department.getDepartfartherid() == 0){
+            department.setDepartfullname(department.getDepartname());
+            department.setDepartfullid(maxid+"");
+        } else {
+            PzDepartment pzDepartment = pzDepartmentMapper.findById(department.getDepartfartherid());
+            department.setDepartfullname(pzDepartment.getDepartfullname()+"/"+department.getDepartname());
+            department.setDepartfullid(pzDepartment.getDepartfullid()+"/"+maxid);
+        }
+        if(department.getSort() == null){
+            department.setSort(0);
+        }
+
+        return pzDepartmentMapper.add(department);
+    }
+
+    @Override
+    public List<PzDepartment> findByFid(int departfartherid) {
+        return pzDepartmentMapper.findByFid(departfartherid);
+    }
+
+    @Override
+    public int edit(PzDepartment department) {
+        PzDepartment d =  pzDepartmentMapper.findById(department.getDepartid());
+        if(d.getDepartfartherid() > 0){
+            department.setDepartfullname(d.getDepartfullname()+"/"+department.getDepartname());
+        } else{
+            department.setDepartfullname(department.getDepartname());
+        }
+        return pzDepartmentMapper.edit(department);
+    }
+
+    @Override
+    public int delDepart(int departid) {
+        List<PzDepartment> departmentList = pzDepartmentMapper.findByFid(departid);
+        if(departmentList.size()>0){
+            return 0;
+        }
+        int result = pzDepartmentMapper.delDepart(departid);
+        if(result > 0){
+            return 1;
+        } else {
+            return 0;
+        }
+
+    }
+
+
 }

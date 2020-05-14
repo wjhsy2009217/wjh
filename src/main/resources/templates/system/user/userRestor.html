@@ -36,6 +36,7 @@
 	                <input type="hidden" id="parentId" name="parentId">
 					<div class="select-list">
 						<ul>
+							<input type="hidden" value="0" id="depa" name="depa">
 							<li>
 								姓名：<input type="text" name="loginName"/>
 							</li>
@@ -49,12 +50,6 @@
 								<option value="5">待入司人员库</option>
 								<option value="6">临时用户</option>
 							</select>
-							</li>
-							<li>
-								部门：<select name="depa">
-									<option value="0">全部</option>
-									<option value="1">测试部门</option>
-								</select>
 							</li>
 							<li>
 								性别：<select name="sex">
@@ -208,19 +203,18 @@
 		
 		function queryDeptTree()
 		{
-			var url = ctx + "system/dept/treeData";
-			var options = {
-		        url: url,
-		        expandLevel: 2,
-		        onClick : zOnClick
-		    };
-			$.tree.init(options);
-			
-			function zOnClick(event, treeId, treeNode) {
-				$("#deptId").val(treeNode.id);
-				$("#parentId").val(treeNode.pId);
-				$.table.search();
-			}
+            var url = ctx + "system/depa/depaTree";
+            var options = {
+                url: url,
+                expandLevel: 2,
+                onClick : zOnClick,
+
+            };
+            $.tree.init(options);
+            function zOnClick(event, treeId, treeNode) {
+                $("#depa").val(treeNode.id);
+                $.table.search();
+            }
 		}
 		
 		$('#btnExpand').click(function() {

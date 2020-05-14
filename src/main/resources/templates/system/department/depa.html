@@ -21,11 +21,11 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="container-div ui-layout-center">
 		<div class="row">
 			<form id="user-form">
-				<input type="hidden" id="rightgroupid" name="rightgroupid" value="0">
+				<input type="hidden" id="departfartherid" name="departfartherid" value="0">
 			</form>
 			<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
 				<a class="btn btn-success" onclick="$.operate.add()" >
@@ -33,9 +33,6 @@
 				</a>
 				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" >
 					<i class="fa fa-edit"></i> 修改
-				</a>
-				<a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" >
-					<i class="fa fa-remove"></i> 删除
 				</a>
 
 			</div>
@@ -60,9 +57,9 @@
 		function queryUserList() {
 		    var options = {
 		        url: prefix + "/departmentPage",
-                createUrl: prefix + "/add/{id}",
+                createUrl: prefix + "/addDepa",
                 updateUrl: prefix + "/editDepa/{id}",
-                removeUrl: prefix + "/remove/{id}",
+                removeUrl: prefix + "/delDepa",
 		        sortName: "createTime",
 		        sortOrder: "desc",
 		        modalName: "用户",
@@ -86,46 +83,75 @@
 		        },
 				{
 					field: 'usedflag',
-					title: '是否隐藏'
+					title: '是否隐藏',
+                    formatter: function(value, row, index) {
+						if(value == 0){
+						    return '显示';
+						}
+                        return '隐藏';
+                    }
 				},
 				{
 					field: 'enddate',
 					title: '有效期'
-				},]
+				},
+				{
+					title: '操作',
+					align: 'left',
+					formatter: function(value, row, index) {
+						if (row.parentId != 0) {
+							var actions = [];
+							actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.departid + '\')"><i class="fa fa-remove">删除</i></a>');
+							return actions.join('');
+						} else {
+							return "";
+						}
+					}
+				}]
 		    };
 		    $.table.init(options);
 		}
-		
+		function remove(id){
+            $.ajax({
+                type: "POST",
+                url: prefix+"/delDepa",
+                data:{"departid":id},
+                dataType: "text",
+                success: function(result){
+                    //alert("保存成功");
+					alert(result);
+                },
+            })
+
+		}
 		function queryDeptTree()
 		{
 			var url = prefix + "/depaTree";
 			var options = {
 		        url: url,
 		        expandLevel: 2,
-		        onClick : zOnClick
+		        onClick : zOnClick,
+
 		    };
 			$.tree.init(options);
-			
 			function zOnClick(event, treeId, treeNode) {
-				$("#rightgroupid").val(treeNode.id);
-                console.log($("#rightgroupid").val());
-				console.log(treeNode);
+				$("#departfartherid").val(treeNode.id);
 				$.table.search();
 			}
 		}
-		
+
 		$('#btnExpand').click(function() {
 			$._tree.expandAll(true);
 		    $(this).hide();
 		    $('#btnCollapse').show();
 		});
-		
+
 		$('#btnCollapse').click(function() {
 			$._tree.expandAll(false);
 		    $(this).hide();
 		    $('#btnExpand').show();
 		});
-		
+
 		$('#btnRefresh').click(function() {
 			queryDeptTree();
 		});

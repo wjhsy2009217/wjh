@@ -4,7 +4,6 @@ import cn.hutool.core.convert.Convert;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hzgc.common.utils.StringUtils;
-import com.hzgc.common.utils.security.ShiroUtils;
 import com.hzgc.framework.web.domain.AjaxResult;
 import com.hzgc.framework.web.page.PageDomain;
 import com.hzgc.framework.web.page.TableDataInfo;
@@ -128,6 +127,10 @@ public class BaseController
         return AjaxResult.error(code, message);
     }
 
+    public AjaxResult error(int code, String message,int size)
+    {
+        return AjaxResult.error(code, message,size);
+    }
     /**
      * 页面跳转
      */
@@ -136,25 +139,7 @@ public class BaseController
         return StringUtils.format("redirect:{}", url);
     }
 
-    public User getUser()
-    {
-        return ShiroUtils.getUser();
-    }
 
-    public void setUser(User user)
-    {
-        ShiroUtils.setUser(user);
-    }
-
-    public Long getUserId()
-    {
-        return getUser().getUserId();
-    }
-
-    public String getLoginName()
-    {
-        return getUser().getLoginName();
-    }
 
 
     /**

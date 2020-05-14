@@ -78,6 +78,7 @@ function loadMenu() {
                     "30102":"system/role/highRole",//高等级角色维护
                     "30103":"system/role/modrgroup",//角色系统权限
                     "30201":"system/user/userAttributes",//用户属性
+                    "30202":"system/depa/depart",//组织架构
                     "30203":"system/user/userMaintain",//人员维护
     };
     $('a[id^="xxx"]').each(function () {

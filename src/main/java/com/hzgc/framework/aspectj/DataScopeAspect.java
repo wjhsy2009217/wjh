@@ -9,7 +9,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import com.hzgc.common.utils.StringUtils;
-import com.hzgc.common.utils.security.ShiroUtils;
 import com.hzgc.framework.aspectj.lang.annotation.DataScope;
 import com.hzgc.framework.web.domain.BaseEntity;
 import com.hzgc.project.system.role.domain.Role;
@@ -45,64 +44,8 @@ public class DataScopeAspect
     {
     }
 
-    @Before("dataScopePointCut()")
-    public void doBefore(JoinPoint point) throws Throwable
-    {
-        handleDataScope(point);
-    }
 
-    protected void handleDataScope(final JoinPoint joinPoint)
-    {
-        // 获得注解
-        DataScope controllerDataScope = getAnnotationLog(joinPoint);
-        if (controllerDataScope == null)
-        {
-            return;
-        }
-        // 获取当前的用户
-        User currentUser = ShiroUtils.getUser();
-        if (currentUser != null)
-        {
-            // 如果是超级管理员，则不过滤数据
-            if (!currentUser.isAdmin())
-            {
-                dataScopeFilter(joinPoint, currentUser, controllerDataScope.tableAlias());
-            }
-        }
-    }
 
-    /**
-     * 数据范围过滤
-     * 
-     * @param da 部门表别名
-     * @return 标准连接条件对象
-     */
-    public static void dataScopeFilter(JoinPoint joinPoint, User user, String alias)
-    {
-        StringBuilder sqlString = new StringBuilder();
-
-        for (Role role : user.getRoles())
-        {
-            String dataScope = role.getDataScope();
-            if (DATA_SCOPE_ALL.equals(dataScope))
-            {
-                sqlString = new StringBuilder();
-                break;
-            }
-            else if (DATA_SCOPE_CUSTOM.equals(dataScope))
-            {
-                sqlString.append(StringUtils.format(
-                        " OR {}.dept_id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id = {} ) ", alias,
-                        role.getRoleId()));
-            }
-        }
-
-        if (StringUtils.isNotBlank(sqlString.toString()))
-        {
-            BaseEntity baseEntity = (BaseEntity) joinPoint.getArgs()[0];
-            baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlString.substring(4) + ")");
-        }
-    }
 
     /**
      * 是否存在注解，如果存在就获取

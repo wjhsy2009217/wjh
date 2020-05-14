@@ -30,16 +30,13 @@ public class Application
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
             registry.addInterceptor(sessionTimeoutInterceptor)
-
-                    // 添加不拦截的请求
-
-                    .excludePathPatterns("/login","/index","/doLogin","/user/getYZM","/user/updateLoginError","/user/checkYZM",
+            // 添加不拦截的请求
+            .excludePathPatterns("/login","/doLogin","/getYZM","/user/updateLoginError","/checkYZM",
                             "/**/*.css","/**/*.js","/**/*.png","/**/*.gif","/**/*.jpg","/**/*.jpeg");
         }
     }
     public static void main(String[] args)
     {
-        // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(Application.class, args);
         System.err.println("平治运营数据中心启动成功!");
     }

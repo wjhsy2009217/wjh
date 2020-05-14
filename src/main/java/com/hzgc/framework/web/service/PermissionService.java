@@ -13,7 +13,7 @@ public class PermissionService
 {
     public String hasPermi(String permission)
     {
-        return isPermittedOperator(permission) ? "" : "hidden";
+        return "";
     }
 
     private boolean isPermittedOperator(String permission)

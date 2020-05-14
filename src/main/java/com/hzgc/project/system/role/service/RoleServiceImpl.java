@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.hzgc.common.constant.UserConstants;
 import com.hzgc.common.support.Convert;
 import com.hzgc.common.utils.StringUtils;
-import com.hzgc.common.utils.security.ShiroUtils;
 import com.hzgc.framework.aspectj.lang.annotation.DataScope;
 import com.hzgc.project.system.role.domain.Role;
 import com.hzgc.project.system.role.domain.RoleDept;
@@ -42,7 +41,7 @@ public class RoleServiceImpl implements IRoleService
 
     /**
      * 根据条件分页查询角色数据
-     * 
+     *
      * @param role 角色信息
      * @return 角色数据集合信息
      */
@@ -55,7 +54,7 @@ public class RoleServiceImpl implements IRoleService
 
     /**
      * 根据用户ID查询权限
-     * 
+     *
      * @param userId 用户ID
      * @return 权限列表
      */
@@ -76,7 +75,7 @@ public class RoleServiceImpl implements IRoleService
 
     /**
      * 根据用户ID查询角色
-     * 
+     *
      * @param userId 用户ID
      * @return 角色列表
      */
@@ -101,7 +100,7 @@ public class RoleServiceImpl implements IRoleService
 
     /**
      * 查询所有角色
-     * 
+     *
      * @return 角色列表
      */
     @Override
@@ -112,7 +111,7 @@ public class RoleServiceImpl implements IRoleService
 
     /**
      * 通过角色ID查询角色
-     * 
+     *
      * @param roleId 角色ID
      * @return 角色对象信息
      */
@@ -124,7 +123,7 @@ public class RoleServiceImpl implements IRoleService
 
     /**
      * 通过角色ID删除角色
-     * 
+     *
      * @param roleId 角色ID
      * @return 结果
      */
@@ -136,7 +135,7 @@ public class RoleServiceImpl implements IRoleService
 
     /**
      * 批量删除角色信息
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @throws Exception
      */
@@ -155,61 +154,25 @@ public class RoleServiceImpl implements IRoleService
         return roleMapper.deleteRoleByIds(roleIds);
     }
 
-    /**
-     * 新增保存角色信息
-     * 
-     * @param role 角色信息
-     * @return 结果
-     */
     @Override
-    public int insertRole(Role role)
-    {
-        role.setCreateBy(ShiroUtils.getLoginName());
-        // 新增角色信息
-        roleMapper.insertRole(role);
-        ShiroUtils.clearCachedAuthorizationInfo();
-        return insertRoleMenu(role);
+    public int insertRole(Role role) {
+        return 0;
     }
 
-    /**
-     * 修改保存角色信息
-     * 
-     * @param role 角色信息
-     * @return 结果
-     */
     @Override
-    public int updateRole(Role role)
-    {
-        role.setUpdateBy(ShiroUtils.getLoginName());
-        // 修改角色信息
-        roleMapper.updateRole(role);
-        ShiroUtils.clearCachedAuthorizationInfo();
-        // 删除角色与菜单关联
-        roleMenuMapper.deleteRoleMenuByRoleId(role.getRoleId());
-        return insertRoleMenu(role);
+    public int updateRole(Role role) {
+        return 0;
     }
 
-    /**
-     * 修改数据权限信息
-     * 
-     * @param role 角色信息
-     * @return 结果
-     */
     @Override
-    public int updateRule(Role role)
-    {
-        role.setUpdateBy(ShiroUtils.getLoginName());
-        // 修改角色信息
-        roleMapper.updateRole(role);
-        // 删除角色与部门关联
-        roleDeptMapper.deleteRoleDeptByRoleId(role.getRoleId());
-        // 新增角色和部门信息（数据权限）
-        return insertRoleDept(role);
+    public int updateRule(Role role) {
+        return 0;
     }
+
 
     /**
      * 新增角色菜单信息
-     * 
+     *
      * @param role 角色对象
      */
     public int insertRoleMenu(Role role)

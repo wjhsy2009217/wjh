@@ -49,10 +49,7 @@
 	<script th:src="@{/ajax/libs/jquery-layout/jquery.layout-latest.js}"></script>
 	<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
 	<script th:inline="javascript">
-		var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
-		var removeFlag = [[${@permission.hasPermi('system:user:remove')}]];
-		var resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];
-		var datas = [[${@dict.getType('sys_normal_disable')}]];
+
 		var prefix = ctx + "system/role";
 
 		$(function() {

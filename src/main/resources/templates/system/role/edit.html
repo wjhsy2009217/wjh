@@ -64,8 +64,8 @@
 		    };
 			$.tree.init(options);
 		});
-	
-		$("#form-role-edit").validate({
+         var node = zTree.getNodeByParam(key,value,parentNode);
+         $("#form-role-edit").validate({
 			rules:{
 				roleName:{
 					required:true,

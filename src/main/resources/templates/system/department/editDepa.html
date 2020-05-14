@@ -34,7 +34,10 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">是否隐藏：</label>
 				<div class="col-sm-8">
-					<input class="form-control" type="text" name="usedflag" id="usedflag" th:field="*{usedflag}">
+					<select id="usedflag" name="usedflag" class="form-control">
+						<option  th:selected="${usedflag=='0'}" value="0">显示</option>
+						<option  th:selected="${usedflag=='1'}" value="1">隐藏</option>
+					</select>
 				</div>
 			</div>
 			<div class="form-group">
@@ -56,102 +59,68 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label">父部门</label>
+				<label class="col-sm-3 control-label">有效期：</label>
 				<div class="col-sm-8">
-					<div id="menuTrees" class="ztree"></div>
+					<div class="input-group date">
+						<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+						<input id="enddate" name="enddate" type="text" onClick="WdatePicker()" class="form-control"/>
+					</div>
 				</div>
 			</div>
 		</form>
 	</div>
 	<div th:include="include::footer"></div>
+	<script th:src="@{/ajax/libs/My97DatePicker/WdatePicker.js}"></script>
 	<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
 	<script type="text/javascript">
 	     $(function() {
 			var url = ctx + "system/depa/depaTree";
 			var options = {
-				id: "menuTrees",
+				id: "departfartherid",
 		        url: url,
-		        check: { enable: true, nocheckInherit: true, chkboxType: { "Y": "ps", "N": "ps" } },
+		        check: { enable: true,chkStyle: "radio",radioType : "all" },
 		        expandLevel: 0
 		    };
 			$.tree.init(options);
 		});
-	
-		$("#form-role-edit").validate({
-			rules:{
-				roleName:{
-					required:true,
-					remote: {
-		                url: ctx + "system/role/checkRoleNameUnique",
-		                type: "post",
-		                dataType: "json",
-		                data: {
-							"roleId": function() {
-							    return $("#roleId").val();
-							},
-							"roleName": function() {
-							    return $.common.trim($("#roleName").val());
-							}
-		                },
-		                dataFilter: function(data, type) {
-		                	return $.validate.unique(data);
-		                }
-		            }
-				},
-				roleKey:{
-					required:true,
-					remote: {
-		                url: ctx + "system/role/checkRoleKeyUnique",
-		                type: "post",
-		                dataType: "json",
-		                data: {
-							"roleId": function() {
-								return $("#roleId").val();
-							},
-							"roleKey": function() {
-							    return $.common.trim($("#roleKey").val());
-							}
-		                },
-		                dataFilter: function(data, type) {
-		                	return $.validate.unique(data);
-		                }
-		            }
-				},
-				roleSort:{
-					required:true,
-					digits:true
-				},
-			},
-			messages: {
-		        "roleName": {
-		            remote: "角色名称已经存在"
-		        },
-		        "roleKey": {
-		            remote: "角色权限已经存在"
-		        }
-		    }
+
+         $("#form-role-add").validate({
+             rules:{
+                 departname:{
+                     required:true,
+                 },
+                 departfartherid:{
+                     required:true,
+                 },
+             },
 		});
 
 		function edit() {
-			var roleId = $("input[name='roleId']").val();
-			var roleName = $("input[name='roleName']").val();
-			var roleKey = $("input[name='roleKey']").val();
-			var roleSort = $("input[name='roleSort']").val();
-			var status = $("input[name='status']").is(':checked') == true ? 0 : 1;
-			var remark = $("input[name='remark']").val();
-			var menuIds = $.tree.getCheckedNodes();
+            var departid = $("input[name='departid']").val();
+            var departname = $("input[name='departname']").val();
+            var departfullname = $("input[name='departfullname']").val();
+            var departcode = $("input[name='departcode']").val();
+            var sort = $("input[name='sort']").val();
+            var usedflag = $("#usedflag option:selected").val();
+            var departtele = $("input[name='departtele']").val();
+            var departaddress = $("input[name='departaddress']").val();
+            var departleader = $("input[name='departleader']").val();
+            var enddate = $("input[name='enddate']").val();
 			$.ajax({
 				cache : true,
 				type : "POST",
-				url : ctx + "system/role/edit",
+				url : ctx + "system/depa/editDapa",
 				data : {
-					"roleId": roleId,
-					"roleName": roleName,
-					"roleKey": roleKey,
-					"roleSort": roleSort,
-					"status": status,
-					"remark": remark,
-					"menuIds": menuIds
+				    "departid" : departid,
+                    "departname": departname,
+                    "departcode": departcode,
+                    "sort": sort,
+                    "usedflag": usedflag,
+					"departfullname" : departfullname,
+                    "departtele": departtele,
+                    "departaddress": departaddress,
+                    "departleader": departleader,
+                    "enddate" : enddate,
 				},
 				async : false,
 				error : function(request) {

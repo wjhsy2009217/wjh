@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org"
-	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
 <link th:href="@{/ajax/libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
@@ -36,6 +35,7 @@
 	                <input type="hidden" id="parentId" name="parentId">
 					<div class="select-list">
 						<ul>
+							<input type="hidden" value="0" id="depa" name="depa">
 							<li>
 								姓名：<input type="text" name="loginName"/>
 							</li>
@@ -49,12 +49,6 @@
 								<option value="5">待入司人员库</option>
 								<option value="6">临时用户</option>
 							</select>
-							</li>
-							<li>
-								部门：<select name="depa">
-									<option value="0">全部</option>
-									<option value="1">测试部门</option>
-								</select>
 							</li>
 							<li>
 								岗位：<select name="post">
@@ -90,18 +84,9 @@
 			</div>
 			
 	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-	        	<a class="btn btn-success" onclick="$.operate.add()">
-	                <i class="fa fa-plus"></i> 新增
-	            </a>
-	             <a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()">
-		            <i class="fa fa-edit"></i> 修改
-		        </a>
 	            <a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()">
 	                <i class="fa fa-remove"></i> 批量离职
 	            </a>
-	            <a class="btn btn-warning" onclick="$.table.exportExcel()">
-		            <i class="fa fa-download"></i> 导出
-		        </a>
 	        </div>
 	        
 	        <div class="col-sm-12 select-table table-striped">
@@ -113,10 +98,7 @@
 	<script th:src="@{/ajax/libs/jquery-layout/jquery.layout-latest.js}"></script>
 	<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
 	<script th:inline="javascript">
-		var editFlag = [[${@permission.hasPermi('system:user:edit')}]];
 		var removeFlag = [[${@permission.hasPermi('system:user:remove')}]];
-		var resetPwdFlag = [[${@permission.hasPermi('system:user:resetPwd')}]];
-		var datas = [[${@dict.getType('sys_normal_disable')}]];
 		var prefix = ctx + "system/user";
 
 		$(function() {
@@ -128,10 +110,7 @@
 		function queryUserList() {
 		    var options = {
 		        url: prefix + "/userMaintainPage",
-		        createUrl: prefix + "/add",
-		        updateUrl: prefix + "/edit/{id}",
 		        removeUrl: prefix + "/removeUserMaintain",
-		        exportUrl: prefix + "/export",
 		        sortName: "createTime",
 		        sortOrder: "desc",
 		        modalName: "用户",
@@ -185,19 +164,18 @@
 		
 		function queryDeptTree()
 		{
-			var url = ctx + "system/dept/treeData";
-			var options = {
-		        url: url,
-		        expandLevel: 2,
-		        onClick : zOnClick
-		    };
-			$.tree.init(options);
-			
-			function zOnClick(event, treeId, treeNode) {
-				$("#deptId").val(treeNode.id);
-				$("#parentId").val(treeNode.pId);
-				$.table.search();
-			}
+            var url = ctx + "system/depa/depaTree";
+            var options = {
+                url: url,
+                expandLevel: 2,
+                onClick : zOnClick,
+
+            };
+            $.tree.init(options);
+            function zOnClick(event, treeId, treeNode) {
+                $("#depa").val(treeNode.id);
+                $.table.search();
+            }
 		}
 		
 		$('#btnExpand').click(function() {

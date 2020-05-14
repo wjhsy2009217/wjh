@@ -31,7 +31,11 @@
     select * from pzdepartment where departid = #{departid}
   </select>
 
-  <update id="updateById">
+  <select id="findByFid" resultMap="department">
+    select * from pzdepartment where departfartherid = #{departfartherid}
+  </select>
+
+  <update id="edit">
     update pzdepartment set
     departname = #{departname},
     departleader = #{departleader},
@@ -41,8 +45,25 @@
     enddate = #{enddate},
     departcode = #{departcode},
     departfullname = #{departfullname},
-    sort = #{sort}
+    sort = #{sort},
+    enddate = #{enddate},
+    modifytime = now()
     where
     departid = #{departid}
   </update>
+  <insert id="add">
+    insert into pzdepartment (departname,departcode,departfullid,departfullname,departfartherid,
+    sort,usedflag,departtele,departaddress,departleader,enddate,modifytime,createtime)
+    values
+     (#{departname},#{departcode},#{departfullid},#{departfullname},#{departfartherid},#{sort},
+     #{usedflag},#{departtele},#{departaddress},#{departleader},#{enddate},now(),now())
+  </insert>
+  <select id="findMaxId" resultType="java.lang.Integer">
+    SELECT departid FROM pzdepartment
+      ORDER BY departid DESC
+      LIMIT 0,1
+  </select>
+  <delete id="delDepart">
+    delete from pzdepartment where departid = #{departid}
+  </delete>
 </mapper>

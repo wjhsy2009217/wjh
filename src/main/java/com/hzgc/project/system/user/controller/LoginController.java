@@ -1,10 +1,12 @@
 package com.hzgc.project.system.user.controller;
 
+import javax.imageio.ImageIO;
 import javax.security.auth.login.AccountExpiredException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.hzgc.common.utils.VerifyCodeUtils;
 import com.hzgc.project.system.user.domain.PzUser;
 import com.hzgc.project.system.user.domain.PzUserInfo;
 import com.hzgc.project.system.user.domain.User;
@@ -21,7 +23,11 @@ import com.hzgc.common.utils.ServletUtils;
 import com.hzgc.common.utils.StringUtils;
 import com.hzgc.framework.web.controller.BaseController;
 import com.hzgc.framework.web.domain.AjaxResult;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -34,6 +40,11 @@ public class LoginController extends BaseController
 {
     @Autowired
     private IUserInfoService userInfoService;
+
+    //验证码
+    private String verifyCode = "";
+
+    private int loginError = 0;
     /*@GetMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response)
     {
@@ -91,7 +102,7 @@ public class LoginController extends BaseController
      */
     @RequestMapping(value="/doLogin",method= RequestMethod.POST)
     @ResponseBody
-    public AjaxResult login(String username, String password, Boolean rememberMe, HttpSession session) {
+    public AjaxResult login(String username, String password, HttpSession session) {
         PzUserInfo queryUsernameForLogin = userInfoService.queryUsernameForLogin(username);
 
         if(queryUsernameForLogin != null){
@@ -108,14 +119,12 @@ public class LoginController extends BaseController
                     lastLoginTime=(String)lastLoginTimes;
                 }
                 session.setAttribute("user", user);//把当前登录用户信息放到session
-                session.setMaxInactiveInterval(60*60*12);
                 System.out.println("登陆成功：当前登录用户名为"+username);
                 return success();
             }
             else{
-
                 String msg = "密码错误！";
-                return error(msg);
+                return error(user.getLoginerror(),msg);
             }
         } else {
             String msg ="该用户不存在！";
@@ -123,4 +132,50 @@ public class LoginController extends BaseController
         }
 
     }
+
+    /**
+     * 注销
+     * @return
+     */
+    @RequestMapping(value = "/logout")
+    public String logout(HttpSession session){
+        session.removeAttribute("user");
+        return "login";
+    }
+    /**
+     * 获取登陆验证码
+     * @return
+     */
+    @RequestMapping(value="/getYZM",method=RequestMethod.GET)
+    @ResponseBody
+    public void getYZM(HttpServletResponse response){
+        response.setContentType("image/jpeg");//设置相应类型
+        response.setHeader("Pragma", "No-cache");//设置响应头信息，不缓存
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expire", 0);
+        verifyCode = VerifyCodeUtils.generateVerifyCode(4);
+        System.out.println(verifyCode);
+        BufferedImage bim = VerifyCodeUtils.generateImageCode(verifyCode, 115, 36, 5, true, Color.WHITE, Color.BLUE, null);
+        try {
+            ImageIO.write(bim, "JPEG", response.getOutputStream());
+        } catch (IOException e) {
+            System.out.println("验证码输出失败！");
+        }
+    }
+    /**
+     * 检查验证码
+     * @param yzm
+     */
+    @RequestMapping(value="/checkYZM",method=RequestMethod.POST)
+    @ResponseBody
+    public String checkYZM(@RequestParam("yzm") String yzm){
+        if(yzm!=null &&
+                yzm.trim()!="" &&
+                verifyCode.equalsIgnoreCase(yzm)){
+            return "ok";
+        }
+        return "error";
+    }
+
+
 }

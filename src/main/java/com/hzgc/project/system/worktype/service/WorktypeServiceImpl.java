@@ -1,15 +1,6 @@
 package com.hzgc.project.system.worktype.service;
 
-import com.hzgc.common.constant.UserConstants;
 import com.hzgc.common.support.Convert;
-import com.hzgc.common.utils.StringUtils;
-import com.hzgc.common.utils.security.ShiroUtils;
-import com.hzgc.project.system.post.domain.Post;
-import com.hzgc.project.system.post.mapper.PostMapper;
-import com.hzgc.project.system.post.mapper.PzPostMapper;
-import com.hzgc.project.system.post.service.IPostService;
-import com.hzgc.project.system.user.domain.PzPost;
-import com.hzgc.project.system.user.mapper.UserPostMapper;
 import com.hzgc.project.system.worktype.domain.PzWorktype;
 import com.hzgc.project.system.worktype.mapper.PzWorktypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;

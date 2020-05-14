@@ -37,9 +37,7 @@
 </div>
 <div th:include="include :: footer"></div>
 <script th:inline="javascript">
-    var editFlag = [[${@permission.hasPermi('system:role:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('system:role:remove')}]];
-    var datas = [[${@dict.getType('sys_normal_disable')}]];
+
     var prefix = ctx + "system/user";
     $(function() {// 初始化内容
         techtitle();

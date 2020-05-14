@@ -22,12 +22,19 @@ public class AjaxResult extends HashMap<String, Object>
      * 返回错误消息
      * 
      * @return 错误消息
+     * @param i
+     * @param msg
+     * @param size
      */
-    public static AjaxResult error()
+    public static AjaxResult error(int i, String msg, int size)
     {
         return error(1, "操作失败");
     }
 
+    public static AjaxResult error()
+    {
+        return error();
+    }
     /**
      * 返回错误消息
      * 
@@ -39,6 +46,10 @@ public class AjaxResult extends HashMap<String, Object>
         return error(500, msg);
     }
 
+    public static AjaxResult error(String msg,int size)
+    {
+        return error(500, msg,size);
+    }
     /**
      * 返回错误消息
      * 

@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import com.hzgc.framework.aspectj.lang.annotation.Excel;
 import com.hzgc.framework.web.domain.BaseEntity;
-import com.hzgc.project.system.dept.domain.Dept;
 import com.hzgc.project.system.role.domain.Role;
 
 /**
@@ -73,8 +72,6 @@ public class User extends BaseEntity
     @Excel(name = "最后登陆时间")
     private Date loginDate;
 
-    /** 部门对象 */
-    private Dept dept;
 
     /** 角色集合 */
     private List<Role> roles;
@@ -256,15 +253,6 @@ public class User extends BaseEntity
         this.loginDate = loginDate;
     }
 
-    public Dept getDept()
-    {
-        return dept;
-    }
-
-    public void setDept(Dept dept)
-    {
-        this.dept = dept;
-    }
 
     public List<Role> getRoles()
     {

@@ -12,8 +12,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.hzgc.framework.config.RuoYiConfig;
 import com.hzgc.framework.web.controller.BaseController;
-import com.hzgc.project.system.menu.domain.Menu;
-import com.hzgc.project.system.menu.service.IMenuService;
 import com.hzgc.project.system.user.domain.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,8 +26,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class IndexController extends BaseController
 {
-    @Autowired
-    private IMenuService menuService;
+
 
     @Autowired
     private RuoYiConfig ruoYiConfig;
@@ -42,11 +39,7 @@ public class IndexController extends BaseController
     public String index(ModelMap mmap)
     {
         // 取身份信息
-      User user = getUser();
         // 根据用户id取出菜单
-        List<Menu> menus = menuService.selectMenusByUser(user);
-        mmap.put("menus", menus);
-        mmap.put("user", user);
         int id = 1;
         mmap.put("copyrightYear", ruoYiConfig.getCopyrightYear());
         mmap.put("pro",projectService.getProjectByUserid(id));

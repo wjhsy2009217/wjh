@@ -12,4 +12,13 @@ public interface IDepartmentService {
     List<Map<String, Object>> depaTree();
 
     PzDepartment findById(int departid);
+
+    int add(PzDepartment department);
+
+    List<PzDepartment> findByFid(int departfartherid);
+
+    int edit(PzDepartment department);
+
+    int delDepart(int departid);
+
 }

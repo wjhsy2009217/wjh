@@ -14,7 +14,7 @@
 					<i class="fa icon-grid"></i>角色列表
 				</div>
 				<div class="col-sm-12 select-table table-striped">
-					<table id="bootstrap-table" data-mobile-responsive="true"></table>
+					<table id="bootstrap-table" data-mobile-responsive="false"></table>
 				</div>
 			</div>
 
@@ -42,7 +42,6 @@
 	<script th:src="@{/ajax/libs/jquery-layout/jquery.layout-latest.js}"></script>
 	<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
 	<script th:inline="javascript">
-		var datas = [[${@dict.getType('sys_normal_disable')}]];
 		var prefix = ctx + "system/role";
 		var rowId = 1;
 
@@ -64,9 +63,6 @@
 		function queryUserList() {
 		    var options = {
                 url: prefix + "/rightgroupList",
-                createUrl: prefix + "/addRightgroup",
-                updateUrl: prefix + "/editRightgroup/{id}",
-                removeUrl: prefix + "/delRightgroup",
                 sortOrder: "level",
                 modalName: "角色维护",
                 search: false,

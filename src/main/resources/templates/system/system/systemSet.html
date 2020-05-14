@@ -29,9 +29,6 @@
 	</div>
 	<div th:include="include :: footer"></div>
 	<script th:inline="javascript">
-		var editFlag = [[${@permission.hasPermi('system:post:edit')}]];
-		var removeFlag = [[${@permission.hasPermi('system:post:remove')}]];
-		var datas = [[${@dict.getType('sys_normal_disable')}]];
 		var prefix = ctx + "system/system";
         $('#edit').click(function(){
             var sid = $('#sid').val();
@@ -45,7 +42,6 @@
 						alert("保存成功");
 					},
 				})
-
         })
 	</script>
 </body>

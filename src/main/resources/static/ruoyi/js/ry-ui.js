@@ -718,7 +718,7 @@
                     check: options.check,
                     view: {selectedMulti: false, nameIsHTML: true},
                     data: {key: {title: "title"}, simpleData: {enable: true}},
-                    callback: {onClick: options.onClick,onCheck:options.onCheck}
+                    callback: {onClick: options.onClick,onCheck:options.onCheck,onAsyncSuccess:options.onAsyncSuccess}
                 };
                 $.get(options.url, function (data) {
                     var treeName = $("#treeName").val();

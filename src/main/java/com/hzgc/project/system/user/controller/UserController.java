@@ -1,7 +1,13 @@
 package com.hzgc.project.system.user.controller;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
 
+import com.hzgc.common.utils.VerifyCodeUtils;
+import com.hzgc.project.system.department.domain.PzDepartment;
+import com.hzgc.project.system.department.service.IDepartmentService;
 import com.hzgc.project.system.headship.domain.PzHeadship;
 import com.hzgc.project.system.headship.service.IHeadshipService;
 import com.hzgc.project.system.rightgroup.domain.PzRightgroup;
@@ -28,6 +34,10 @@ import com.hzgc.framework.web.page.TableDataInfo;
 import com.hzgc.project.system.post.service.IPostService;
 import com.hzgc.project.system.role.service.IRoleService;
 import com.hzgc.project.system.user.service.IUserService;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -68,150 +78,15 @@ public class UserController extends BaseController
     @Autowired
     private IWorktypeService worktypeService;
 
+    @Autowired
+    private IDepartmentService departmentService;
+
+
 
     @GetMapping()
     public String user()
     {
         return prefix + "/user";
-    }
-
-    @PostMapping("/list")
-    @ResponseBody
-    public TableDataInfo list(User user)
-    {
-        startPage();
-        List<User> list = userService.selectUserList(user);
-        return getDataTable(list);
-    }
-
-    @Log(title = "用户管理", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(User user)
-    {
-        List<User> list = userService.selectUserList(user);
-        ExcelUtil<User> util = new ExcelUtil<User>(User.class);
-        return util.exportExcel(list, "user");
-    }
-
-    /**
-     * 新增用户
-     */
-    @GetMapping("/add")
-    public String add(ModelMap mmap)
-    {
-        mmap.put("roles", roleService.selectRoleAll());
-        mmap.put("posts", postService.selectPostAll());
-        return prefix + "/add";
-    }
-
-    /**
-     * 新增保存用户
-     */
-    @Log(title = "用户管理", businessType = BusinessType.INSERT)
-    @PostMapping("/add")
-    @Transactional(rollbackFor = Exception.class)
-    @ResponseBody
-    public AjaxResult addSave(User user)
-    {
-        if (StringUtils.isNotNull(user.getUserId()) && User.isAdmin(user.getUserId()))
-        {
-            return error("不允许修改超级管理员用户");
-        }
-        return toAjax(userService.insertUser(user));
-    }
-
-    /**
-     * 修改用户
-     */
-    @GetMapping("/edit/{userId}")
-    public String edit(@PathVariable("userId") Long userId, ModelMap mmap)
-    {
-        mmap.put("user", userService.selectUserById(userId));
-        mmap.put("roles", roleService.selectRolesByUserId(userId));
-        mmap.put("posts", postService.selectPostsByUserId(userId));
-        return prefix + "/edit";
-    }
-
-    /**
-     * 修改保存用户
-     */
-    @RequiresPermissions("system:user:edit")
-    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    @PostMapping("/edit")
-    @Transactional(rollbackFor = Exception.class)
-    @ResponseBody
-    public AjaxResult editSave(User user)
-    {
-        if (StringUtils.isNotNull(user.getUserId()) && User.isAdmin(user.getUserId()))
-        {
-            return error("不允许修改超级管理员用户");
-        }
-        return toAjax(userService.updateUser(user));
-    }
-
-    @RequiresPermissions("system:user:resetPwd")
-    @Log(title = "重置密码", businessType = BusinessType.UPDATE)
-    @GetMapping("/resetPwd/{userId}")
-    public String resetPwd(@PathVariable("userId") Long userId, ModelMap mmap)
-    {
-        mmap.put("user", userService.selectUserById(userId));
-        return prefix + "/resetPwd";
-    }
-
-    @RequiresPermissions("system:user:resetPwd")
-    @Log(title = "重置密码", businessType = BusinessType.UPDATE)
-    @PostMapping("/resetPwd")
-    @ResponseBody
-    public AjaxResult resetPwd(User user)
-    {
-        return toAjax(userService.resetUserPwd(user));
-    }
-
-    @RequiresPermissions("system:user:remove")
-    @Log(title = "用户管理", businessType = BusinessType.DELETE)
-    @PostMapping("/remove")
-    @ResponseBody
-    public AjaxResult remove(String ids)
-    {
-        try
-        {
-            return toAjax(userService.deleteUserByIds(ids));
-        }
-        catch (Exception e)
-        {
-            return error(e.getMessage());
-        }
-    }
-
-    /**
-     * 校验用户名
-     */
-    @PostMapping("/checkLoginNameUnique")
-    @ResponseBody
-    public String checkLoginNameUnique(User user)
-    {
-        return userService.checkLoginNameUnique(user.getLoginName());
-    }
-
-    /**
-     * 校验手机号码
-     */
-    @PostMapping("/checkPhoneUnique")
-    @ResponseBody
-    public String checkPhoneUnique(User user)
-    {
-        return userService.checkPhoneUnique(user);
-    }
-
-    /**
-     * 校验email邮箱
-     */
-    @PostMapping("/checkEmailUnique")
-    @ResponseBody
-    public String checkEmailUnique(User user)
-    {
-        return userService.checkEmailUnique(user);
     }
 
 
@@ -223,6 +98,8 @@ public class UserController extends BaseController
     {
         List<PzPost> post = postService.selectAll();
         mmap.put("post", post);
+        List<PzDepartment> depa = departmentService.selectAll();
+        mmap.put("depa", depa);
         return prefix + "/userRestor";
     }
 
@@ -277,20 +154,20 @@ public class UserController extends BaseController
      */
     @PostMapping("/checkPwdUnique")
     @ResponseBody
-    public String checkPwdUnique(String old)
+    public String checkPwdUnique(String old, HttpSession session)
     {
-        User user = getUser();
-        return userService.checkPwdUnique(user.getUserId(),old);
+        PzUserInfo user = (PzUserInfo)session.getAttribute("user");
+        return userService.checkPwdUnique(user.getUserid(),old);
     }
 
     /**
      * 保存修改密码
      */
     @PostMapping("/editPwd")
-    public String editPwd(String pwd)
+    public String editPwd(String pwd,HttpSession session)
     {
-        User user = getUser();
-        userService.editUserPwd(user.getUserId().longValue(),pwd);
+        PzUserInfo user = (PzUserInfo)session.getAttribute("user");
+        userService.editUserPwd(user.getUserid().longValue(),pwd);
         return "redirect:editPassword";
     }
 
