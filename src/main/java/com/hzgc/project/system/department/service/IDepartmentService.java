@@ -21,4 +21,6 @@ public interface IDepartmentService {
 
     int delDepart(int departid);
 
+    String checkLoginNameUnique(String departfartherid,String departid);
+
 }

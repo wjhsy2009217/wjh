@@ -11,6 +11,7 @@
 				<label class="col-sm-3 control-label ">部门全称：</label>
 				<div class="col-sm-8">
 					<input class="form-control" type="text" readonly="true" name="departfullname" id="departfullname" th:field="*{departfullname}"/>
+					<input class="form-control" type="hidden" name="departfullid" id="departfullid" th:field="*{departfullid}"/>
 				</div>
 			</div>
 			<div class="form-group">
@@ -67,6 +68,15 @@
 					</div>
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">部门：</label>
+				<div class="col-sm-8">
+					<div class="input-group date">
+						<div id="departfartherid" name="departfartherid"class="ztree"></div>
+					</div>
+				</div>
+			</div>
+
 		</form>
 	</div>
 	<div th:include="include::footer"></div>
@@ -74,28 +84,53 @@
 	<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
 	<script type="text/javascript">
 	     $(function() {
-			var url = ctx + "system/depa/depaTree";
-			var options = {
-				id: "departfartherid",
-		        url: url,
-		        check: { enable: true,chkStyle: "radio",radioType : "all" },
-		        expandLevel: 0
-		    };
-			$.tree.init(options);
+             var url = ctx + "system/depa/depaTree";
+             var options = {
+                 id: "departfartherid",
+                 url: url,
+                 check: { enable: true,chkStyle: "radio",radioType : "all" },
+                 expandLevel: 0,
+                onCheck : onCheck,
+             };
+             $.tree.init(options);
 		});
 
-         $("#form-role-add").validate({
+         $("#form-role-edit").validate({
              rules:{
                  departname:{
-                     required:true,
-                 },
-                 departfartherid:{
                      required:true,
                  },
              },
 		});
 
+        function onCheck(event, treeId, treeNode){
+             var treeObj=$.fn.zTree.getZTreeObj("departfartherid"),
+                 nodes=treeObj.getCheckedNodes(true);
+             console.log(nodes);
+            console.log(nodes[0].id);
+            $.ajax({
+                 type: "POST",
+                 url: ctx + "system/depa/checkDepartfatuerId",
+                 data:{
+                     "departfartherid":nodes[0].id,
+                     "departid":$('#departid').val(),
+                 },
+                success : function(data) {
+                     if(data != "success"){
+                         alert(data);
+					 }
+                }
+             })
+         }
 		function edit() {
+            var treeObj=$.fn.zTree.getZTreeObj("departfartherid");
+			if(treeObj.getCheckedNodes(true).length == 0){
+                var departfartherid = "";
+			} else {
+                var nodes=treeObj.getCheckedNodes(true);
+                var departfartherid = nodes[0].id;
+			}
+			var departfullid = $("input[name='departfullid']").val();
             var departid = $("input[name='departid']").val();
             var departname = $("input[name='departname']").val();
             var departfullname = $("input[name='departfullname']").val();
@@ -106,6 +141,7 @@
             var departaddress = $("input[name='departaddress']").val();
             var departleader = $("input[name='departleader']").val();
             var enddate = $("input[name='enddate']").val();
+            console.log(departfartherid)
 			$.ajax({
 				cache : true,
 				type : "POST",
@@ -121,6 +157,8 @@
                     "departaddress": departaddress,
                     "departleader": departleader,
                     "enddate" : enddate,
+					"departfullid" : departfullid,
+					"departfartherid" : departfartherid,
 				},
 				async : false,
 				error : function(request) {

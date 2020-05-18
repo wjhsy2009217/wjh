@@ -21,4 +21,12 @@ public interface PzDepartmentMapper {
     int edit(PzDepartment department);
 
     int delDepart(int departid);
+
+    List<PzDepartment> findByFullName(String fullName);
+
+    List<PzDepartment> findByFullidNotDepartid(PzDepartment department);
+
+    List<PzDepartment> findFatherId(int departfartherid);
+
+    List<PzDepartment> findByFullId(String departfullid);
 }

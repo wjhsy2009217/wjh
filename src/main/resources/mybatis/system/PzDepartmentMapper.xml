@@ -45,6 +45,8 @@
     enddate = #{enddate},
     departcode = #{departcode},
     departfullname = #{departfullname},
+    departfullid = #{departfullid},
+    departfartherid = #{departfartherid},
     sort = #{sort},
     enddate = #{enddate},
     modifytime = now()
@@ -66,4 +68,16 @@
   <delete id="delDepart">
     delete from pzdepartment where departid = #{departid}
   </delete>
+  <select id="findByFullName" resultMap="department">
+    select * from pzdepartment where departfullname like #{departfullname}
+  </select>
+  <select id="findByFullidNotDepartid" resultMap="department">
+     select * from pzdepartment where departfullid like #{departfullid} and departid != #{departid}
+  </select>
+  <select id="findFatherId" resultMap="department">
+     select * from pzdepartment where departfartherid = #{departfartherid}
+  </select>
+  <select id="findByFullId" resultMap="department">
+    select * from pzdepartment where departfullid like #{departfullid}
+  </select>
 </mapper>

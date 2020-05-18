@@ -16,7 +16,6 @@ import java.util.Map;
 /**
  * 菜单信息
  * 
- * @author zyd
  */
 @Controller
 @RequestMapping("/system/depa")
@@ -75,6 +74,17 @@ public class DepartmentController extends BaseController
     public String addDepa()
     {
         return prefix + "/addDepa";
+    }
+
+    /**
+     * 校验用户名
+     */
+    @PostMapping("/checkDepartfatuerId")
+    @ResponseBody
+    public String checkLoginNameUnique(String departfartherid,String departid)
+    {
+        return departmentService.checkLoginNameUnique(departfartherid,departid);
+
     }
 
     /**
