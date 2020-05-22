@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-role-edit" th:object="${customer}">
+			<input id="id" name="id" type="hidden" th:field="*{id}"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">项目名：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="customername" id="customername" th:field="*{customername}"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">客户名：</label>
+				<div class="col-sm-8">
+					<select name="organid" id="organid" class="form-control">
+						<option th:each="o : ${organ}" th:text="${o.organname}" th:value="${o.id}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">联系人：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="leader" id="leader" th:field="*{leader}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">手机号：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="handtel" id="handtel" th:field="*{handtel}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">商务名：</label>
+				<div class="col-sm-8">
+					<div class="col-sm-8">
+						<select name="userid" id="userid" class="form-control">
+							<option th:each="u : ${user}" th:text="${u.username}" th:value="${u.userid}"></option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">地址：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="address" id="address" th:field="*{address}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">分数据连接串：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="dbconnectstr" id="dbconnectstr" th:field="*{dbconnectstr}">
+				</div>
+			</div>
+		</form>
+	</div>
+	<div th:include="include::footer"></div>
+	<script th:src="@{/ajax/libs/My97DatePicker/WdatePicker.js}"></script>
+	<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+	<script type="text/javascript">
+
+
+         $("#form-role-edit").validate({
+             rules:{
+                 departname:{
+                     required:true,
+                 },
+             },
+		});
+
+
+		function edit() {
+            var id = $("input[name='id']").val();
+            var customername = $("input[name='customername']").val();
+            var organid  = $("select[name='organid']").val();
+            var organname = $("#organid option:selected").text()
+            var leader	 = $("input[name='leader']").val();
+            var handtel = $("input[name='handtel']").val();
+            var userid  = $("select[name='userid']").val();
+            var username = $("#userid option:selected").text()
+            var address	 = $("input[name='address']").val();
+            var dbconnectstr = $("input[name='dbconnectstr']").val();
+			$.ajax({
+				cache : true,
+				type : "POST",
+				url : ctx + "system/custom/editCustomerSave",
+				data : {
+                    "id": id,
+                    "customername": customername,
+                    "organid": organid,
+                    "organname": organname,
+                    "leader": leader	,
+                    "handtel": handtel,
+                    "userid": userid,
+                    "username": username,
+                    "address": address	,
+                    "dbconnectstr": dbconnectstr,
+				},
+				async : false,
+				error : function(request) {
+					$.modal.alertError("系统错误");
+				},
+				success : function(data) {
+					$.operate.saveSuccess(data);
+				}
+			});
+		}
+
+		function submitHandler() {
+	        if ($.validate.form()) {
+	        	edit();
+	        }
+	    }
+	</script>
+</body>
+</html>

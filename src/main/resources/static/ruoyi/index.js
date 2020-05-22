@@ -80,6 +80,9 @@ function loadMenu() {
                     "30201":"system/user/userAttributes",//用户属性
                     "30202":"system/depa/depart",//组织架构
                     "30203":"system/user/userMaintain",//人员维护
+                    "770101":"system/custom/organ",//企业维护
+                    "770102":"system/custom/customer",//客户维护
+                    "770103":"system/custom/rightcustomer",//角色客户维护
     };
     $('a[id^="xxx"]').each(function () {
         var id = $(this).attr("id").slice(3);
